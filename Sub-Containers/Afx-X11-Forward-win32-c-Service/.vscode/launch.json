@@ -1,0 +1,69 @@
+// START Server: Execute i the root: ./runsvr.sh
+//  
+//    - This exapnds to something(example) like
+//        /usr/bin/wine Z:/usr/share/win32/gdbserver.exe --multi localhost:3234 Z:/projects/win32_c/default_prj/_make_out/apps.exe
+//
+//    - When the .env file is changed. Execute: 'source set_env.sh' and reload VSC (F1 -> Reload Window )
+//      When you fail to reload, the environment variables: APPLICATION_NAME_DBG and OUT may be emptyS
+//
+//  WARNINGL Changes in the launch.josn file MUST be made persistent in the file: launch.tmpl!
+{
+  "version": "0.2.0",
+      "configurations": [
+      {          
+        "name": "(gdb) Launch with gdbserver",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/${env:OUT}/${env:APPLICATION_NAME_DBG}",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}/${env:OUT}",   
+        "environment": [
+          { "name": "DISPLAY", "value": ":host.docker.internal:0"},          
+            // run: source set_env.sh (located in root project dir)
+                                
+        ],    
+        //"debugServerPath": "/usr/lib/wine/wine",             // DON't Wine is started by server process
+        "MIMode": "gdb",
+        "externalConsole": true,          
+        "miDebuggerPath": "/usr/bin/gdb-multiarch",
+        
+        // Make sure to use an OTHER PORT!   
+        "debugServerArgs": "Z:/usr/share/win32/gdbserver.exe --debug  localhost:2324 Z:${workspaceFolder}/${env:OUT}/${env:APPLICATION_NAME_DBG}",  // with:wine C:\\TDM-64\\bin\\gdbserver.exe --multi :1234 C:\\projects\\win32_c\\default_prj\\_make_out\\out32.exe          
+        "miDebuggerServerAddress": "localhost:3234",          // This MUST point to SERVER PORT.
+        "serverLaunchTimeout":11000,
+        "filterStderr": false,
+        "filterStdout": true,          
+        "serverStarted": "GDB\\ server\\ started",
+        "logging": {
+            "moduleLoad": true,
+            "trace": true,
+            "engineLogging": true,
+            "programOutput": true,
+            "exceptions": true
+          },
+          "preLaunchTask": "AFX: build 32 Debug"            // AFX: build 64 Debug            
+          
+      }
+    ]
+  }
+  
+  
+  // NOTES
+  // Below was part of the config to make sure the X display(for XLaunch -x-server) was set. but this is doen by docker already and not neede
+  //      "environment": [
+  //          { "name": "DISPLAY", "value": ":host.docker.internal:0" }            
+  //        ],    
+  
+  // I used to set the architecture manually, but it is better to let it handle automatically
+  //      "setupCommands": [
+  //          {
+  //              "description": "Set architecture",
+  //              "text": "set architecture i386:x86-64",
+  //              "ignoreFailures": false
+  //          }
+  //      ],
+  
+  // Some one suggested  the below code, as hint to gdbserver, while it sseems not to harm, it does nothing and is nonsens
+  // just use it for your program arguments
+  //      "args": ["target remote localhost:1234"], 
