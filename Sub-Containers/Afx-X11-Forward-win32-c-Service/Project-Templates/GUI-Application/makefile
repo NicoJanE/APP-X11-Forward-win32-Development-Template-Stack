@@ -59,7 +59,10 @@ LDFLAGS_RELEASE = $(LDFLAGS_COMMON)
 RC_FILE = ./resource/Win32Template.rc
 RES32_FILE = $(OUT)/Win32Template32.res
 
+
 OBJ32_FILES = $(SRC:.c=.o)
+# Use a pattern rule to ensure all *.o files are refering to the OBJDIR directory
+OBJ32_FILES_PREFIX_PATH = $(addprefix $(OBJDIR)/, $(OBJ32_FILES))
 
 
 # General dependency tasks, called by targets
@@ -68,9 +71,7 @@ OBJ32_FILES = $(SRC:.c=.o)
 # PRE-BUILD 32 bits. Compile resource file
 $(RES32_FILE): $(RC_FILE)
 	$(WINDRES32_COMP) $(RC_FILE) -O coff -o $(RES32_FILE)
-
-	
-	
+		
 # COMPILING source 32 bits
 CC = $(CC32_COMP)  # Default to 32-bit compiler
 %.o: %.c 
@@ -113,9 +114,9 @@ out32: CC = $(CC32_COMP)
 out32: CFLAGS = $(CFLAGS_RELEASE)
 out32: LDFLAGS = $(LDFLAGS_RELEASE)
 out32: .prepare_cleanscr .prepare_obj_dir $(OBJ32_FILES) $(RES32_FILE) 
-	@echo "\n\nLINK STAGE (Releaes):  : $(OBJDIR)/$(OBJ32_FILES)  -->$(OUT)/$(APPLICATION_NAME) \n\t"
-	@echo " -> $(CC) $(OBJDIR)/$(OBJ32_FILES) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)"
-	@$(CC) $(OBJDIR)/$(OBJ32_FILES) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)
+	@echo "\n\nLINK STAGE (Releaes) Create:  -->  $(OUT)/$(APPLICATION_NAME) \n\t"
+	@echo " -> $(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)"
+	@$(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)
 
 ##################################################################
 
@@ -129,9 +130,9 @@ out32_debug: CC = $(CC32_COMP)
 out32_debug: CFLAGS = $(CFLAGS_DEBUG)
 out32_debug: LDFLAGS = $(LDFLAGS_DEBUG)
 out32_debug: .prepare_cleanscr .prepare_obj_dir $(OBJ32_FILES) $(RES32_FILE)
-	@echo "\n\nLINK STAGE (Debug):  : $(OBJDIR)/$(OBJ32_FILES)  -->$(OUT)/$(APPLICATION_NAME_DBG) \n\t"
-	@echo " -> $(CC) $(OBJDIR)/$(OBJ32_FILES) $(RES32_FILE) $(LDFLAGS) -o  $(OUT)/$(APPLICATION_NAME_DBG)"	
-	@$(CC) $(OBJDIR)/$(OBJ32_FILES) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME_DBG)
+	@echo "\n\nLINK STAGE (Debug) Create:  -->  $(OUT)/$(APPLICATION_NAME_DBG) \n\t"
+	@echo " -> $(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o  $(OUT)/$(APPLICATION_NAME_DBG)"	
+	@$(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME_DBG)
 
 ##################################################################
 

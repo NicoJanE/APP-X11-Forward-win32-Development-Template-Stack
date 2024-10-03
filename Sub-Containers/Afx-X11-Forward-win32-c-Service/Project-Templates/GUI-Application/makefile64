@@ -59,6 +59,8 @@ RC_FILE = ./resource/Win32Template.rc
 RES64_FILE = $(OUT)/Win32Template64.res
 
 OBJ64_FILES = $(SRC:.c=.o)
+# Use a pattern rule to ensure all *.o files are refering to the OBJDIR directory
+OBJ64_FILES_PREFIX_PATH = $(addprefix $(OBJDIR)/, $(OBJ64_FILES))
 
 
 # General dependency tasks, called by targets
@@ -115,9 +117,9 @@ out64: CC = $(CC64_COMP)
 out64: CFLAGS = $(CFLAGS_RELEASE)
 out64: LDFLAGS = $(LDFLAGS_RELEASE)
 out64: .prepare_cleanscr .prepare_obj_dir .prepare_dir  $(OBJ64_FILES) $(RES64_FILE) 
-	@echo "\n\nLINK STAGE (Releaes):  : $(OBJDIR)/$(OBJ64_FILES)  -->$(OUT)/$(APPLICATION_NAME) \n\t"
-	@echo " -> $(CC) $(OBJDIR)/$(OBJ64_FILES) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)"
-	@$(CC) $(OBJDIR)/$(OBJ64_FILES) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)
+	@echo "\n\nLINK STAGE (Releaes) Create: --> $(OUT)/$(APPLICATION_NAME) \n\t"
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)"
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)
 
 ##################################################################
 
@@ -131,9 +133,9 @@ out64_debug: CC = $(CC64_COMP)
 out64_debug: CFLAGS = $(CFLAGS_DEBUG)
 out64_debug: LDFLAGS = $(LDFLAGS_DEBUG)
 out64_debug: .prepare_cleanscr .prepare_obj_dir .prepare_dir $(OBJ64_FILES) $(RES64_FILE)
-	@echo "\n\nLINK STAGE (Debug):  : $(OBJDIR)/$(OBJ64_FILES)  -->$(OUT)/$(APPLICATION_NAME_DBG) \n\t"
-	@echo " -> $(CC) $(OBJDIR)/$(OBJ64_FILES) $(RES64_FILE) $(LDFLAGS) -o  $(OUT)/64/$(APPLICATION_NAME_DBG)"	
-	@$(CC) $(OBJDIR)/$(OBJ64_FILES) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME_DBG)
+	@echo "\n\nLINK STAGE (Debug) Create:  -->  $(OUT)/$(APPLICATION_NAME_DBG) \n\t"
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o  $(OUT)/64/$(APPLICATION_NAME_DBG)"	
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME_DBG)
 
 ##################################################################
 
@@ -141,6 +143,6 @@ out64_debug: .prepare_cleanscr .prepare_obj_dir .prepare_dir $(OBJ64_FILES) $(RE
 # Clean up object files, resources, and the executable
 # ---------------------------------------------------------------
 clean: 
-	rm -rf $(OBJDIR) $(RES64_FILE) $(OUT)/64/$(APPLICATION_NAME) $(OUT)/64/$(APPLICATION_NAME_DBG)
+	rm -rf $(OBJDIR) $(RES64_FILE) $(OUT)/64 
 	
 ##################################################################	
