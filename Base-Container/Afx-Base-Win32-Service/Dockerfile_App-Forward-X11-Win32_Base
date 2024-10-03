@@ -42,6 +42,14 @@ RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get install -y \
     wine64 wine32 
 
+
+# fix wine64
+RUN ln -s /usr/lib/wine/wine64 /usr/bin/wine64
+
+# Set the WINEPATH needed to locate Windows DLL files,  32 Bits     ;       64bits
+ENV WINEPATH="/usr/lib/gcc/i686-w64-mingw32/13-win32;/usr/lib/gcc/x86_64-w64-mingw32/13-win32"
+
+
 # Expose necessary ports if required (e.g., for debugging or network services)
 EXPOSE 8080
 

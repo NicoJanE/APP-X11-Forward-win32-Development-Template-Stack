@@ -441,7 +441,7 @@ source ./set_env.sh        # Set the environment variables from the file ***.env
 make all                   # Should generate executable out32.exe in _make_out
 wine _make_out/app.exe   # Should display the application (running for the first time takes a while)
 make -fmakefile64 all      # Should generate executable out64.exe in _make_out
-wine _make_out/64/app.exe   # Should display the application (running for the first time takes a while)
+win64e _make_out/64/app.exe   # Should display the application (running for the first time takes a while)
 
 # Alternatively you may use cmake to build the app 
 cd _build
@@ -450,6 +450,7 @@ cmake .. -DUSE_64_BIT=ON        # OR Configuration 64 bits (unicode) Other build
 cmake --build .                 # Builds 32 or 64 Application in _build/bin
 cmake --build . --target out32 -- VERBOSE=1 # Alternatively, be specific and use debug output
 wine bin/out32.exe              # Execute it
+wine64 bin/out32.exe              # Execute it
  </pre>
 Yes indeed, your development would be in VSC or another chosen IDE, but this should prove you that all works.
 
