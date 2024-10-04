@@ -1,4 +1,4 @@
-# This file is part of: App-X11-Forward-win32-Development-Template-Stack
+# This file is part of: App-X11-Forward-win32-C-Development-Template-Stack
 # Copyright (c) 2024 Nico Jan Eelhart
 #
 # This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
@@ -23,6 +23,7 @@ ENV DISPLAY=host.docker.internal:0
 # Install necessary packages 
 # 
 RUN apt-get update && apt-get install -y \
+	rsync \	   
     cmake \
     ninja-build \
     git \
@@ -49,6 +50,17 @@ RUN vcpkg install gtest
 # Install the VS Code debugger
 # RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
 
+
+
+
+# Set the WINEPATH needed to locate Windows DLL files, 32 Bits and 64 Bits
+# Make sure to set this in the Windows style, so wine gets it (Z:\\...) 
+# 	When an app can not find the dll, use the command:
+#		find / -name "xyz"
+#	To look for it if it returns the file, add the path to that file to the WINEPATH below
+#
+ENV WINEPATH="Z:\\usr\\lib\\gcc\\i686-w64-mingw32\\13-win32;Z:\\usr\\lib\\gcc\\x86_64-w64-mingw32\\13-win32"
+ 
 
 # 1) Set the working directory
 WORKDIR /projects
@@ -100,21 +112,10 @@ RUN echo 'PS1="\[\033[1;37;46m\]Docker:\[\033[0m\]\[\033[0;33m\]${debian_chroot:
 # Use conditional logic to handle different scenarios.
 RUN if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Yes" ]; then \
        echo "Custom app mode is enabled, do copy"; \       
-	   mkdir -p ${PRJ_NAME_ARG}/_build; \	   
-       mkdir -p ${PRJ_NAME_ARG}/src/views; \
-       mkdir -p ${PRJ_NAME_ARG}/headers/views; \
-       mkdir -p ${PRJ_NAME_ARG}/resource/; \
-       mkdir ${PRJ_NAME_ARG}/src/controls; \
-       mkdir ${PRJ_NAME_ARG}/headers/controls; \
-       mkdir ${PRJ_NAME_ARG}/src/models; \
-       mkdir ${PRJ_NAME_ARG}/headers/models; \
-       cp Project-Templates/GUI-Application/resource/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/resource;  \       
-       cp Project-Templates/GUI-Application/src/views/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/views;  \
-       cp Project-Templates/GUI-Application/headers/views/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/views;  \
-       cp Project-Templates/GUI-Application/src/controls/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/controls;  \
-       cp Project-Templates/GUI-Application/headers/controls/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/controls;  \
-       cp Project-Templates/GUI-Application/src/models/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/models;  \
-       cp Project-Templates/GUI-Application/headers/models/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/models;  \
+	   mkdir -p ${PRJ_NAME_ARG}/_build; \	   	   
+	   rsync -a Project-Templates/GUI-Application/resource/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/resource/;  \       
+	   rsync -a Project-Templates/GUI-Application/src/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/;  \       
+	   rsync -a Project-Templates/GUI-Application/headers/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/;  \       
        cp Project-Templates/GUI-Application/headers/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers;  \            
        cp Project-Templates/GUI-Application/_backup ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
        cp Project-Templates/GUI-Application/makefile* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
@@ -122,9 +123,9 @@ RUN if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Yes" ]; then \
        cp Project-Templates/GUI-Application/*.sh ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
        cp Project-Templates/GUI-Application/.env ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \       
     else \
-       if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Stront" ]; then \
-           echo "    - .Stront project Name: ${PRJ_BASE_ARG}/${PRJ_NAME_ARG} GUI based application )"; \           
+       if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Alternative_1" ]; then \
+           echo "    - 'Alternative 1' project, Name: ${PRJ_BASE_ARG}/${PRJ_NAME_ARG} GUI based application )"; \     
        else \
-           echo "NOTING NORMAL HAS BEEN SET. Nothing to do"!!; \
+           echo "\n\n\n\nRemark no template is copied! . Nothing to do\n\n"!!; \
        fi \
     fi

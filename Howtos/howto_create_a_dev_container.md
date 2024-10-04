@@ -6,7 +6,7 @@ RefPages:
 
 <small>
 <br><br>
-_This file is part of: **App-X11-Forward-Win32 Development Template Stack**_
+_This file is part of: **App-X11-Forward-Win32-C Development Template Stack**_
 _Copyright (c) 2024. Nico Jan Eelhart._
 _This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree._
 </small>

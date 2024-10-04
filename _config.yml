@@ -1,8 +1,8 @@
 # A change in this file, NEEDS a Jekyll restart!
 #
 
-title: <font size="6"><span style="color:#FFD700">D</span>ocker <span style="color:#FFA500">T</span>emplate <span style="color:#FF7F50">S</span>tack App X-11 Forward Win-32
-description: <b><i><font size="3">A DTS Container for Cross-Compiling Win32 GUI Projects</span></font></i></b>
+title: <font size="6"><span style="color:#FFD700">D</span>ocker <span style="color:#FFA500">T</span>emplate <span style="color:#FF7F50">S</span>tack App X-11 Forward Win-32-C
+description: <b><i><font size="3">A DTS Container for Cross-Compiling Win32 GUI C Projects</span></font></i></b>
 
 
 show_downloads: true
