@@ -5,5 +5,7 @@
   "C_Cpp.default.includePath": [
     "/usr/x86_64-w64-mingw32/include",
     "${workspaceFolder}/**"
-  ]
-}
+  ],
+  "C_Cpp.dimInactiveRegions": true,
+  "C_Cpp.intelliSenseEngine": "default",
+ }

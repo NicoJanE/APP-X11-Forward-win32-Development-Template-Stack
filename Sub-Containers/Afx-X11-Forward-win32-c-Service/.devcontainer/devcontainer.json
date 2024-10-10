@@ -1,10 +1,5 @@
 {
-    "name": "My C extensions",
-    "extensions": [
-        "ms-vscode.cpptools",       // C/C++ extension
-        "ms-vscode.cmake-tools"      // CMake Tools extension (if needed)
-        "ms-vscode.cpptools-extension-pack"
-        "ms-vscode.makefile-tools"
-        "xyz.local-history"
-    ]
+  "customizations": {
+    "vscode": {}
+  }
 }

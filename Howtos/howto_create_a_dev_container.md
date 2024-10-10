@@ -22,7 +22,8 @@ _This source code is licensed under the MIT License found in the  'LICENSE.md' f
 - ***Sub Containers***
   - [Create win32 C application container](#31steps-to-create-a-win32-C-application-container)<br> 
   - [Start to win32 C application container](#321-attach-to-the-win32-c-application-container)<br> 
-  - [Develop with VSC](#4-develop-with-vsc-in-the-host)<br> <br>
+  - [Develop with VSC](#4-develop-with-vsc-in-the-host)<br>
+  - [Appendix 1 Quick Setup](#appendix-1-quick-setup) <br><br>
 </div>
 
 
@@ -102,15 +103,24 @@ Before executing the Docker Compose file, ensure that the following items are in
 
 
 ### 2.1.1 Download the Special Ubuntu WSL version
+> *Remark:*{: style="color: black;font-size:13px; "}
+> <small>If you have already installed the **WSL Ubuntu-Docker-App-X11-Win32Dev** WSL (as required by one of our other stacks), you don't need to do this again. You can reuse the already created WSL environment. In that case, you can proceed to: **2.1.4 Install the X-Server (VcXsrv)**.
+<br></small>
 Finding this version can be a bit challenging, especially because we need the manual installation files (with the .Appx or .AppxBundle extensions). The Windows Store provides a direct installer, but we cannot use it because we need to control the installation name and location. Follow these steps:
 - ([Download](https://learn.microsoft.com/en-us/windows/wsl/install-manual)) the image from here, Scroll to almost the bottom where it states **'Downloading distributions'** and choose the *Ubuntu 24.04* link (note that this is the distribution  we support, you may try other ones and be fine with it, but we have not tested it)
 - Now, as of Aug 2024, a lott of documentation\samples will state that your receive **\*.Appx** extension file and that you need to change the file to **\*.zip.**  But in our case you probably receive a **\*.AppxBundle** file which contains multiple Ubuntu versions. Below is shown how we get access to the right folder so we can install it in the next paragraph (in my case the download name is ***'Ubuntu2204-221101.AppxBundle'*** we use this name in our example:
 
-  - First rename ***'Ubuntu2204-221101.AppxBundle'***' to ***'Ubuntu2204-221101.zip'***
-  - Unpack the file with for example **7zip**
-  - In the unpacked folder locate the file for your machine distribution ,likely ***'Ubuntu_2204.1.7.0_x64.appx'** rename this file to *.zip
-  - Unpack the above renamed zip file
-  - In the resulting folder you should see a file called ***'install.tar.gz'*** this is the location where the next command has to point to.
+  - For Ubuntu 22.04 LTS <small>(April 2027)</small>
+    - First rename ***'Ubuntu2204-221101.AppxBundle'*** to ***'Ubuntu2204-221101.zip'***
+    - Unpack the file with for example **7zip**
+    - In the unpacked folder locate the file for your machine distribution ,likely ***'Ubuntu_2204.1.7.0_x64.appx'*** rename this file to *.zip and Unpack it
+  - For Ubuntu 24.04 LTS  <small>(April 2029)</small>
+    - First rename ***'Ubuntu2404-221101.AppxBundle'*** to ***'Ubuntu2404-221101.zip'***
+    - Unpack the file with for example **7zip**
+    - In the unpacked folder locate the file for your machine distribution ,likely ***'Ubuntu_2404.0.5.0_x64.appx'*** rename this file to *.zip and Unpack it
+    
+  In **both cases** in the last unpacked folder you should see a file called ***'install.tar.gz'*** this is the location where the next command has to point to.
+
 
 ### 2.1.2 Install the Ubuntu WSL version
 When we have the distribution source, we can install the WSL environment. To keep the Base Container files in one place we do this in the root of our Base-Service folder ( **'./Base-Container/Afx-BaseWin32-Service/wsl2distro'***).
@@ -402,7 +412,7 @@ With this sub-container we  will create a GUI project for a classic **Win32** ap
 By default, this sub-container creates a typical Win32 C Desktop application project. We currently provide only one template, but other specialized templates can be added. In the ***.env** file, the type: **PRJ_TYPE_USE_CUSTOM_APP=Yes** is used to install the template project. See Section 4 for the global usage of this container in Visual Studio Code (VSC). If there are any specifics regarding VSC, we will indicate them at the end of this section.
 
 
-### 3.1 Steps to Create a win32 C application container
+### 3.2.1 Steps to Create a win32 C application container
 1. Open a Command Prompt in: ***.\Sub-Containers\Afx-X11-Forward-win32-c-Service\\***
 1. **Configure the project**:
   - Open the ***.env*** file to adjust the necessary settings: <br><br>
@@ -412,7 +422,7 @@ By default, this sub-container creates a typical Win32 C Desktop application pro
 <pre class="nje-cmd-one-line">docker-compose -f compose_win32-c_project.yml up -d  --remove-orphans --build --force-recreate </pre>
 <span class="nje-ident"></span>*Note this will create a container and a C Win32 Desktop project by default.*
 
-### 3.2.1 Attach to the win32 C application container
+### 3.2.2 Attach to the win32 C application container
 After running the commands in 3.1 you can start the **'C Win32 sub container'** in combination with the WSL. See the **side note: Start Docker via WSL** if you need help with this.  Once started you can use Visual Studio Code (VSC) to start developing the application you planned to, for help with VSC see Section 4.  Here ar in short the steps to start/attach to the container
 - In a OS Terminal: Start the WSL and start Docker in the WSL:
 <pre class="nje-cmd-multi-line">
@@ -450,7 +460,7 @@ cmake .. -DUSE_64_BIT=ON        # OR Configuration 64 bits (unicode) Other build
 cmake --build .                 # Builds 32 or 64 Application in _build/bin
 cmake --build . --target out32 -- VERBOSE=1 # Alternatively, be specific and use debug output
 wine bin/out32.exe              # Execute it
-wine64 bin/out32.exe              # Execute it
+wine64 bin/64/out64.exe         # or in case of 64 bits version
  </pre>
 Yes indeed, your development would be in VSC or another chosen IDE, but this should prove you that all works.
 
@@ -490,7 +500,14 @@ docker exec -it  YourSubContainer /bin/bash
 # 4 Develop with VSC in the host
 To develop in **V**isual **S**tudio **C**ode we advice the following instructions 
 
-### 4.1. Open the .NET application container in VSC (@host)
+First make sure you have the following extensions locally install, to be able to work with the docker containers:
+- **Remote Development**. 
+  Attach VSC to Docker(Develop directly inside our Docker container ), Remote WSL, Develope on remote SSH, GitHub Codespaces. 
+- **Docker** (Microsoft)
+- **Dev Containers** (Microsoft) optional
+
+
+### 4.1. Open the C application container in VSC (@host)
 - Mak sure Docker is attached from the WSL! See [here](#321-attach-to-the-win32-c-application-container)
 - Press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
 - Select our **afx-x11-forward-win32-c-service-afx-win32-c-1** container
@@ -500,6 +517,9 @@ This opens a new Window with the  container information
 ### 4.2. Open Folder and building your app.
 - Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
 - Select Open Folder and enter: **/projects/win32_c/default_prj**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
+
+> *Notice: Recommend extensions*{: style="color: gray;font-size:13px; "}<br>
+> <small>For this Docker project we have a few extensions defined, please allow these in during the opening of the container, so when you see something like: ***'Do you want to install the recommended extensions from ...'*** Press on the **Install**  button, this makes sure all functionality will work as defined, see the file ***.vscode/extensions.json*** for the recommend extension list.    <br></small>
 
 When opening the Win32 C container and the project root folder in Visual Studio Code, a dedicated Visual Studio Code server will be installed within the container. This server provides a full Visual Studio Code environment with its own settings and extensions, which we have provided (see the side note below). Upon opening the folder for the first time, the system will detect any required extensions and may prompt you to install them. If so, follow the instructions to complete the installation. For a list of extensions, refer to the side note below.
 
@@ -565,3 +585,25 @@ In a CMD Docker shell (root), enter the following command:
 ### 4.5  Backup
 There is a simple backup script which you can use to backup the project to **shared-host** directory. In a Docker shell (root) execute:
 <pre class="nje-cmd-one-line">./_backup </pre>
+<br><br><br><br>
+
+## Appendix 1. Quick setup
+If you have previously installed this container, you can use the quick setup steps below. Otherwise, please first read or at least skim through this document.
+- In case you don't have the **WSL** container
+<pre class="nje-cmd-one-line"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz"  </pre>
+- Create docker base container
+ <pre class="nje-cmd-one-line">docker-compose -f compose_app_forward_x11_win32-cpp_base.yml up -d --build --force-recreate  --remove-orphans </pre>
+ - Install C++ sub-container
+  <pre class="nje-cmd-one-line">docker-compose -f compose_win32-cpp_project.yml up -d  --remove-orphans --build --force-recreate  </pre>
+  - Attach docker to the WSL
+  <pre class="nje-cmd-multi-line">
+# Start WSL
+wsl -d Ubuntu-docker-App-X11-Win32Dev  
+
+# Attach docker
+docker exec -it afx-x11-forward-win32-cpp-service-axf-win32-cpp-1 /bin/bash 
+# If the container cannot be found, restart the Docker app and ensure 
+# WSL integration is enabled in Docker settings!
+</pre>
+
+   After this you should be able to open the container in VSC and start developing

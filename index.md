@@ -22,8 +22,29 @@ While this is designed as a cross-compiling Win32 environment, nothing stops you
 - Win32 C project environment
 
 
-## Quick Setup
-There are no quick setup instructions for this image. First, you need to install the Base Container/Image, which takes about 20 minutes. After that, you can easily add Sub Containers. Please refer to the document [how to create a development container](./Howtos/howto_create_a_dev_container). which explains the installation of the **Base Container** and any available **Sub Containers**.
 
+### Appendix 1. Quick setup
+If you have previously installed this container, you can use the quick setup steps below. Otherwise please first read the [how to create a development container](./Howtos/howto_create_a_dev_container) document.
+- In case you don't have the **WSL** container
+<pre class="nje-cmd-one-line"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz"  </pre>
+- Create docker base container
+ <pre class="nje-cmd-one-line">docker-compose -f compose_app_forward_x11_win32_base.yml up -d --build --force-recreate  --remove-orphans </pre>
+ - Install C sub-container
+  <pre class="nje-cmd-one-line">docker-compose -f compose_win32-c_project.yml up -d  --remove-orphans --build --force-recreate  </pre>
+  - Attach the docker 'C sub container' to the WSL
+  <pre class="nje-cmd-multi-line">
+# Start WSL
+wsl -d Ubuntu-docker-App-X11-Win32Dev  
 
+# Attach docker
+docker exec -it afx-x11-forward-win32-c-service-axf-win32-c-1 /bin/bash
+# If the container cannot be found, restart the Docker app and ensure 
+# WSL integration is enabled in Docker settings!
+</pre>
+
+After this you should be able to open the container in VSC and start developing, be sure to run the following command first to read the application name from the .env file and set it in the project
+<pre class="nje-cmd-multi-line">
+source ./set_env.sh  # From terminal in the root project dir.
+                     # You may need to reload the VSC Window!
+</pre>
 

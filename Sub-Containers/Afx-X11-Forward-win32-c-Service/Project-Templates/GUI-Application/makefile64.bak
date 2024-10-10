@@ -2,10 +2,9 @@
 # Copyright (c) 2024 Nico Jan Eelhart
 #
 # This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
-#
-#
+
 # Call:
-#		 make out32
+#		 make out64
 
 # Application Environment variables (scope during debug sessions) from file: .env
 -include .env
@@ -18,13 +17,13 @@
 headerbase = ./headers
 
 OUT = _make_out
-OBJDIR =$(OUT)/obj32
+OBJDIR =$(OUT)/obj64
 
 # C Compilers
-CC32_COMP = i686-w64-mingw32-gcc
+CC64_COMP = x86_64-w64-mingw32-gcc
 
 # Resource compiler
-WINDRES32_COMP = i686-w64-mingw32-windres
+WINDRES64_COMP =x86_64-w64-mingw32-windres
 
 # Compiler flags: headers and define unicode
 CFLAGS_COMMON = -I$(headerbase) -DUNICODE -D_UNICODE
@@ -33,11 +32,8 @@ CFLAGS_COMMON = -I$(headerbase) -DUNICODE -D_UNICODE
 # Library flags (generic)
 # for unicode version we must use the flag: -municode otherwise
 # you get error that the WinMain could not be found
-# Some other libaries win32 :
-# -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32  -lcomctl32 -lws2_32
-# -ladvapi32 netapi32  -lshscrap -lwinmm -limm32
 LDFLAGS_COMMON = -luser32 -lkernel32 -municode -mwindows
-# Debug
+
 
 
 # Get Header files: Instead of do the following:
@@ -60,23 +56,24 @@ LDFLAGS_RELEASE = $(LDFLAGS_COMMON)
 
 # Define the .rc file to compile and resulting .res file 
 RC_FILE = ./resource/Win32Template.rc
-RES32_FILE = $(OUT)/Win32Template32.res
+RES64_FILE = $(OUT)/Win32Template64.res
 
-
-OBJ32_FILES = $(SRC:.c=.o)
+OBJ64_FILES = $(SRC:.c=.o)
 # Use a pattern rule to ensure all *.o files are refering to the OBJDIR directory
-OBJ32_FILES_PREFIX_PATH = $(addprefix $(OBJDIR)/, $(OBJ32_FILES))
+OBJ64_FILES_PREFIX_PATH = $(addprefix $(OBJDIR)/, $(OBJ64_FILES))
 
 
 # General dependency tasks, called by targets
 # ***************************************************************
 
 # PRE-BUILD 32 bits. Compile resource file
-$(RES32_FILE): $(RC_FILE)
-	$(WINDRES32_COMP) $(RC_FILE) -O coff -o $(RES32_FILE)
-		
+$(RES64_FILE): $(RC_FILE)
+	$(WINDRES64_COMP) $(RC_FILE) -O coff -o $(RES64_FILE)
+
+	
+	
 # COMPILING source 32 bits
-CC = $(CC32_COMP)  # Default to 32-bit compiler
+CC = $(CC64_COMP)  # Default to 64-bit compiler
 %.o: %.c 
 #	clear
 	@echo "\n\nCOMPILE STAGE: " 
@@ -93,6 +90,9 @@ CC = $(CC32_COMP)  # Default to 32-bit compiler
 .prepare_cleanscr:
 	clear	
 
+.prepare_dir:
+	mkdir -p $(OUT)/64
+
 # Create The same sub directorie structure in $(OBJDIR) as in ./src
 # Suppress output(@) unless explicitly instructed (echo)
 .prepare_obj_dir: 
@@ -104,38 +104,38 @@ CC = $(CC32_COMP)  # Default to 32-bit compiler
 	           
 	
 
-all:   out32
+all:   out64
 ##################################################################
 
 
-# Target 32 bits Release
+# Target 64 bits Release
 # ---------------------------------------------------------------
 #
 # Let source know this is 32 bits version(for entry point)
 # Calls .prepare_* first
-out32: CC = $(CC32_COMP) 
-out32: CFLAGS = $(CFLAGS_RELEASE)
-out32: LDFLAGS = $(LDFLAGS_RELEASE)
-out32: .prepare_cleanscr .prepare_obj_dir $(OBJ32_FILES) $(RES32_FILE) 
-	@echo "\n\nLINK STAGE (Releaes) Create:  -->  $(OUT)/$(APPLICATION_NAME) \n\t"
-	@echo " -> $(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)"
-	@$(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME)
+out64: CC = $(CC64_COMP) 
+out64: CFLAGS = $(CFLAGS_RELEASE)
+out64: LDFLAGS = $(LDFLAGS_RELEASE)
+out64: .prepare_cleanscr .prepare_obj_dir .prepare_dir  $(OBJ64_FILES) $(RES64_FILE) 
+	@echo "\n\nLINK STAGE (Releaes) Create: --> $(OUT)/$(APPLICATION_NAME) \n\t"
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)"
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)
 
 ##################################################################
 
 
-# Target 32 bits Debug
+# Target 64 bits Debug
 # ---------------------------------------------------------------
 #
 # Let source know this is 32 bits version(for entry point)
 # Calls .prepare_* first
-out32_debug: CC = $(CC32_COMP)
-out32_debug: CFLAGS = $(CFLAGS_DEBUG)
-out32_debug: LDFLAGS = $(LDFLAGS_DEBUG)
-out32_debug: .prepare_cleanscr .prepare_obj_dir $(OBJ32_FILES) $(RES32_FILE)
+out64_debug: CC = $(CC64_COMP)
+out64_debug: CFLAGS = $(CFLAGS_DEBUG)
+out64_debug: LDFLAGS = $(LDFLAGS_DEBUG)
+out64_debug: .prepare_cleanscr .prepare_obj_dir .prepare_dir $(OBJ64_FILES) $(RES64_FILE)
 	@echo "\n\nLINK STAGE (Debug) Create:  -->  $(OUT)/$(APPLICATION_NAME_DBG) \n\t"
-	@echo " -> $(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o  $(OUT)/$(APPLICATION_NAME_DBG)"	
-	@$(CC) $(OBJ32_FILES_PREFIX_PATH) $(RES32_FILE) $(LDFLAGS) -o $(OUT)/$(APPLICATION_NAME_DBG)
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o  $(OUT)/64/$(APPLICATION_NAME_DBG)"	
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME_DBG)
 
 ##################################################################
 
@@ -143,6 +143,6 @@ out32_debug: .prepare_cleanscr .prepare_obj_dir $(OBJ32_FILES) $(RES32_FILE)
 # Clean up object files, resources, and the executable
 # ---------------------------------------------------------------
 clean: 
-	rm -rf $(OBJDIR) $(RES32_FILE) $(OUT)/$(APPLICATION_NAME) $(OUT)/$(APPLICATION_NAME_DBG)
+	rm -rf $(OBJDIR) $(RES64_FILE) $(OUT)/64 
 	
 ##################################################################	

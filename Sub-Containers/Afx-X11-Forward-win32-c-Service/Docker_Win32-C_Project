@@ -115,6 +115,7 @@ RUN if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Yes" ]; then \
 	   mkdir -p ${PRJ_NAME_ARG}/_build; \	   	   
 	   rsync -a Project-Templates/GUI-Application/resource/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/resource/;  \       
 	   rsync -a Project-Templates/GUI-Application/src/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/;  \       
+	   rsync -a Project-Templates/GUI-Application/doc/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/doc/;  \       
 	   rsync -a Project-Templates/GUI-Application/headers/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/;  \       
        cp Project-Templates/GUI-Application/headers/*.* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers;  \            
        cp Project-Templates/GUI-Application/_backup ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \

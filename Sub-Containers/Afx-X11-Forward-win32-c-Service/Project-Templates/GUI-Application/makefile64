@@ -32,6 +32,9 @@ CFLAGS_COMMON = -I$(headerbase) -DUNICODE -D_UNICODE
 # Library flags (generic)
 # for unicode version we must use the flag: -municode otherwise
 # you get error that the WinMain could not be found
+# Some other libaries win32 :
+# -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32  -lcomctl32 -lws2_32
+# -ladvapi32 netapi32  -lshscrap -lwinmm -limm32
 LDFLAGS_COMMON = -luser32 -lkernel32 -municode -mwindows
 
 
