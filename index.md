@@ -4,27 +4,50 @@ RefPages:
  - howto_create_a_dev_container
 --- 
 
-<small>
-<br>
-_This file is part of: **App-X11-Forward-win32-C-Development-Template -Stack**_
-_Copyright (c) 2024 Nico Jan Eelhart_
-_This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree._
-</small>
-<br><br>
+# Cross-Compiling Win32 <span style="color: #409EFF; font-size: 0.6em; font-style: italic;"> -  Docker Container</span>
 
-## What
+## ℹ️ Introduction
+
 A Docker Template Stack Container for **Cross-Compiling Win32** GUI Projects.
-The output of the GUI application is forwarded from the Linux container to the X11 server on the host (**XLaunch**). Win32 C applications can be created using the MinGW API. Additionally, the GUI application can be run in Linux by utilizing the **Wine** environment, and the output from Wine is forwarded to the X11 server on the Windows host.
+The output of the GUI application is forwarded from the Linux container to the X11 server on the host (**XLaunch**). Win32 C applications can be created using the MinGW API. Additionally, the GUI application can be run in Linux by utilizing the **Wine** environment, and the output from ***Wine*** is forwarded to the X11 server on the Windows host.
 
-While this is designed as a cross-compiling Win32 environment, nothing stops you from using it for other (GUI) application development!
+## Setup
 
-**Available Sub Containers**
-- Win32 C project environment
+Below an overview of the available containers and the documenattion to setup the Conatiners, for the quick setup see the [dd](#quick-setup)
+
+### Full documentation Setup
+
+For the full documentation see the Setup Guide of the Base Container
+<div class="nje-table-base-span">
+<span class="nje-table-row">
+        <span class="nje-column1-value">Base Container </span>
+        <span class="nje-column2-desc">Required Base container packages for the Win32 Project </span>
+        <span class="nje-column3-button"> 
+            <a href="./Howtos/howto_create_a_dev_container">Full Setup Guide</a>
+        </span>
+ </span>
+ </div>
 
 
+#### Sub Container Setup
+In addition to the bas container, which is requirted, the real win32 C Project template is contained in a sub project, currently we have these sub containers
 
-### Appendix 1. Quick setup
-If you have previously installed this container, you can use the quick setup steps below. Otherwise please first read the [how to create a development container](./Howtos/howto_create_a_dev_container) document.
+<div class="nje-table-sub-span">
+<span class="nje-table-row">
+    <span class="nje-column1-value">Win32 C Cross Compilation</span>
+    <span class="nje-column2-desc">Developement environement for Win32 MINGW developement </span>
+    <span class="nje-column3-button"> 
+        <a href="./Howtos/howto_create_a_dev_container">Setup Guide</a>
+    </span>
+</span>
+ </div>
+
+
+ <div class="nje-br3"> </div> 
+
+
+### Quick setup
+If you have previously installed this container, you can use the quick setup steps below. Otherwise please first read the [Full Setup Guide](./Howtos/howto_create_a_dev_container) document.
 - In case you don't have the **WSL** container
 <pre class="nje-cmd-one-line"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz"  </pre>
 - Create docker base container
@@ -47,4 +70,13 @@ After this you should be able to open the container in VSC and start developing,
 source ./set_env.sh  # From terminal in the root project dir.
                      # You may need to reload the VSC Window!
 </pre>
+
+
+<span class="nje-br3"> </span>
+<sub><i> This file is part of:  **App-X11-Forward-win32-C-Development-Template -Stack**
+Copyright (c) 2025 Nico Jan Eelhart. This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
+</i></sub>
+
+<p align="center">─── ✦ ───</p>
+
 
