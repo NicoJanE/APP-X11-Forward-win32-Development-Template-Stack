@@ -4,6 +4,8 @@ RefPages:
  - howto_create_a_dev_container   
 --- 
 
+<!-- markdownlint-disable MD033 MD001 MD041 MD040 MD001  MD039 MD037 MD026 MD007 -->
+
  <div class="nje-br3"> </div> 
 
 <div class="custom-style" style="--nje-color: #3077C8; --nje-size:12px; --nje-bg-color:#EDEDED">
@@ -134,6 +136,7 @@ Before starting the setup, familiarize yourself with the project's folder struct
 This chapter will cover the setup of the **Base Container Service** (folder: 'Base-Container') and everything else required to run a GUI application on a Windows host. At the end of this setup, we will demonstrate that the program works as expected by executing a sample X application in the Base Container (**xeyes**).
 
 ### The Basic Container Setup
+
 Before executing the Docker Compose file, ensure that the following items are installed and configured (refer to section 1.1, Process Architecture). The steps for these items will be explained in more detail in the following paragraphs:
 
 <span class="nje-colored-block" style="--nje-bgcolor:#06a406;; --nje-textcolor:white; --nje-vmove2:10px "> Overview</span>
@@ -180,45 +183,38 @@ When we have the distribution source, we can install the WSL environment. To kee
 
 - **Open** in the sub folder: ***'.\Base-Container\Afx-Base-Win32-Service\'*** a CMD prompt.
 - **Execute** this command and replace the ***"install.tar.gz.file"*** with the result from the previous step(full path)
-  <pre class="nje-cmd-one-line-sm-indent1"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz" </pre>
-  <span class="nje-expect-block"> This results in a **Ubuntu-docker-App-X11-Win32Dev** WSL in: **./wsl2-distro**. **Check**: </span>
-  
-   <pre class="nje-cmd-multi-line-sm">
-  # Check commands:
-  
-  # Displays the distribution:
+  <pre class="nje-cmd-one-line-sm-indent1"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz" </pre>  
+
+<!-- markdownlint-disable-next-line MD022 -->
+<div class="nje-expect-multi-lines-indent2">
+- This creates a **Ubuntu-docker-App-X11-Win32Dev** WSL distribution in: **./wsl2-distro**. 
+- **Useful WSL management commands**:
+  <pre class="nje-cmd-multi-line-sm-indent1">
+  # Verify installation
   wsl --list --verbose
 
-  # Remove the distribution
-  wsl --unregister YourDistributionName
-  
-  # More WSL command in the next paragraph 
+  # Start the distribution
+  wsl -d Ubuntu-docker-App-X11-Win32Dev
 
-</pre>
+  # Stop the distribution  
+  wsl --terminate Ubuntu-docker-App-X11-Win32Dev
+
+  # Execute command without opening terminal
+  wsl -d Ubuntu-docker-App-X11-Win32Dev -- ls /home
+
+  # Set as default distribution
+  wsl --set-default Ubuntu-docker-App-X11-Win32Dev
+
+  # Remove the distribution (if needed)
+  wsl --unregister Ubuntu-docker-App-X11-Win32Dev
+  </pre>
+</div>
 
 ### 2.1.3 Configure the Ubuntu WSL version
 
-- To start and manage your WSL2 Ubuntu distribution, use the following command:
+Now we need to update and configure our distribution. Start the WSL distribution and execute the following Linux commands:
 
-<pre class="nje-cmd-multi-line-sm-indent4" style="margin-top:-14px;">
-#  This will open a CLI terminal and start the WSL if needed
-#  Use 'exit' to return to Windows. while it remains started
-wsl -d Ubuntu-docker-App-X11-Win32Dev
-
-#  Stops the distribution
-wsl --terminate Ubuntu-docker-App-X11-Win32Dev
-
-#  Start, exec command, and returns direct(no CMD)
-wsl -d Ubuntu-docker-App-X11-Win32Dev -- ls /home
-
-#  Set default when running command; wsl
-wsl --set-default Ubuntu-docker-App-X11-Win32Dev  
-
-</pre>
-
-- Next we need to update and configure our distribution. Make sure our WSL distribution is started, and the execute the following Linux commands:
-
-<pre class="nje-cmd-multi-line-sm-indent4" style="margin-top:-14px;">
+<pre class="nje-cmd-multi-line-sm-indent0" style="margin-top:-14px;">
 
 # 1.1                                   # Update the Ubuntu distribution
 apt update && apt upgrade -y            
@@ -250,15 +246,14 @@ if (! pgrep -x "dockerd" > /dev/null); then
 fi
 EOF
 
-# 3.2 Let make sure to easily identify the container (prompt)
+# 3.2 Set up container identification (custom prompt)
 cat >> ~/.bashrc << 'EOF'
 PS1="\[\033[91m\]WSL:\[\033[0m\]\[\033[0;33m\]\
 ${debian_chroot:+($debian_chroot)}\u\[\033[0m\]\
 :\[\033[91m\] App-X11-Win32Dev \[\033[0m\]../\W# "
 EOF
 
-# 4 Make sure to reload the start-up command,
-# to apply the 3.* commands
+# 4 Reload the configuration to apply the changes
 source ~/.bashrc   # Reload, enter
  # check with: ps -a  should show dockerd
 
@@ -269,7 +264,7 @@ exit
 
 ### 2.1.4 Install the X-Server (VcXsrv)
 
-To install the X-server and receive graphical output from the application, follow these instructions:
+To install the X-Server in the Windows host, and receive graphical output from the WSL application, follow these instructions:
 
 - [Download]( https://sourceforge.net/projects/vcxsrv/) and Install the VcXsrv software.
 - After installation start XLaunch
@@ -283,7 +278,7 @@ To install the X-server and receive graphical output from the application, follo
 Finally, to create an start the base container.
 
 - Open the service sub folder: ***'.\Base-Container\Afx-Base-Win32-Service\\***' within a new CMD
-- Make sure you are **login** into **Docker**
+- Make sure you are **logged in** to **Docker**
 - We use a fixed IP address in the Compose file to make it easier to communicate with services, such as an SSH server (not used in this setup). While this is not strictly necessary, we have included it by default. If you encounter any issues, you may choose to remove it from the **compose_app_forward_x11_win32_base.yml** file. The pre-configured IP address used can be found in the **.env** file. see:
 
 <pre class="nje-cmd-multi-line-sm-indent4" style="margin-top:-14px;"> FIXED_SUBNET  # Default: 172.16.0.0/16            FIXED_IP      # Default: 172.16.0.18</pre>
@@ -412,7 +407,7 @@ After running the command in 2.1.5 and 2.1.6 we can test if the setup **succeede
 
 - Use the **'nano'** command to create a new file **'hello.c'** with this content:
   <pre class="nje-cmd-multi-line-sm">
-#include &lt;windows.h&gt;
+  #include &lt;windows.h&gt;
   int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
   {
           MessageBox(NULL, "Hello, Win32!", "Win32 Program", MB_OK);
@@ -421,7 +416,7 @@ After running the command in 2.1.5 and 2.1.6 we can test if the setup **succeede
   </pre>
 
 - Check if we can build the program:
-    <pre class="nje-cmd-multi-line-sm"> BUILD: i686-w64-mingw32-gcc hello.c -o out.exe       # Creates 32 bits App
+  <pre class="nje-cmd-multi-line-sm"> BUILD: i686-w64-mingw32-gcc hello.c -o out.exe       # Creates 32 bits App
  #BUILD: x86_64-w64-mingw32-gcc hello.c -o out.exe    # Creates 64 bits App
  #BUILD: i686-w64-mingw32-c++ hello.c++ -o out.exe    # Creates 32 bits App
  #BUILD: x86_64-w64-mingw32-gcc hello.c++ -o out.exe  # Creates 64 bits App </pre>
@@ -461,10 +456,12 @@ Be aware that **MinGW** does not cover all of the **APIs** provided by Microsoft
 - (This list is not exhaustive)
 
 <span class="nje-colored-block" style="--nje-bgcolor:orange; --nje-textcolor:white; --nje-vmove2:10px "> Partial Support APIs</span>
+
 - COM and OLE
 - Security APIs
 - Windows Management Instrumentation
 - (This list is not exhaustive)
+
 </div>
 
 ***Possible Improvements***  
@@ -480,7 +477,7 @@ Continue with **Section 3** to set up the currently available sub-containers. Th
 
 ## 3. Creating the Sub containers
 
-This section provides various combinations of Dockerfiles and Compose files, which can be used to create different **sub-containers**. Before proceeding, make sure you have already created the **Base Container** as described in **Section 2** and that it works properly.
+This section provides various combinations of Dockerfiles and Compose files, which can be used to create different **sub-containers**. Before proceeding, ensure you have already created the **Base Container** as described in **Section 2** and that it functions correctly.
 
 In the **Sub-Containers** folder, each sub-container is stored in a separate subfolder. Sub-containers typically consist of specific project templates, including Visual Studio Code settings, build tasks, and additional build tools or libraries when required. Since this environment is designed for Win32 development, the **focus** is on **C** and **C++** projects and related frameworks.
 
@@ -539,7 +536,7 @@ wine _make_out/app.exe   # Should display the application (running for the first
 make -fmakefile64 all      # Should generate executable out64.exe in _make_out
 win64e _make_out/64/app.exe   # Should display the application (running for the first time takes a while)
 
-# Alternatively you may use cmake to build the app 
+# Alternatively you may use cmake to build the app
 cd _build
 cmake ..                        # Configuration 32 bits (unicode) or use:
 cmake .. -DUSE_64_BIT=ON        # OR Configuration 64 bits (unicode) Other build dir!
@@ -560,25 +557,26 @@ Yes indeed, your development would be in VSC or another chosen IDE, but this sho
 ### Troubleshooting: Starting Docker via WSL
 
 As explained in ***'Start Docker from the WSL Distribution'*** we must use the docker container in combination with the correct WSL distribution, this is short recap explaining how to start the Docker container, for more detailed information see the mentioned section.
+
 - In case of problems  (i.e. ***Docker complains: 'can find the container'*** )  first consider to **restart** the docker for desktop application (not just the container) on the host.
 - Ensure the sub-container is started in Docker Desktop, so we can attach to it in WSL.
 - Then execute these steps in the WL distribution:
 
-<span class="nje-ident"></span> <small>(this assumes that you did not change the service name in the  WSL name )</small>
-<pre class="nje-cmd-multi-line-sm">
+<small>(this assumes that you did not change the service name in the  WSL name )</small>
+<pre class="nje-cmd-multi-line-sm-indent1">
 # To make sure the correct WSL is used by our Docker container:
 #  
 # Start the correct WSL, docker inside the WSL will started also
 # so You may need to give a few returns after executing this command
 wsl -d Ubuntu-docker-App-X11-Win32Dev
-> 
+
 # From within the WSL attach to our Docker container at the host:
 # if you changed the name use: 'docker ps' from the host to display the name
 #   - When it is not started you can do this first with:
 #       docker start YourSubContainer
 #
 docker exec -it  YourSubContainer /bin/bash
-</pre>                
+</pre>
 *Warning:*{: style="color: red;font-size:12px;margin-top:111px; "} <small>When the container can't be found, first try to restart the Docker service!</small> 
 
 <p align="center" style="padding:20px;">─── ✦ ───</p>
@@ -590,10 +588,11 @@ docker exec -it  YourSubContainer /bin/bash
 
 ## 4 Develop with VSC in the host
 
-To develop in **V**isual **S**tudio **C**ode we advise the following instructions 
+To develop in **V**isual **S**tudio **C**ode we advise the following instructions
 
-First make sure you have the following extensions locally install, to be able to work with the docker containers:
-- **Remote Development**. 
+First ensure you have the following extensions installed locally to work with Docker containers:
+
+- **Remote Development**.
   Attach VSC to Docker(Develop directly inside our Docker container ), Remote WSL, Develope on remote SSH, GitHub Codespaces. 
 - **Docker** (Microsoft)
 - **Dev Containers** (Microsoft) optional
@@ -690,13 +689,45 @@ There is a simple backup script which you can use to backup the project to **sha
 
 ## Appendix 1. Quick setup
 
-**NEEDS CHECK, Could be incomplete**
-
 If you have previously installed this container, you can use the quick setup steps below. Otherwise, please first read or at least skim through this document.
 
-- In case you don't have the **WSL** container
+**Prerequisites:**
+
+- Make sure **VcXsrv** is installed and configured (see [section 2.1.4](#214-install-the-x-server-vcxsrv) if needed)
+- Ensure you have the **install.tar.gz** file (see [Get WSL Installation file](#manual-wsl) if needed)
+
+- **Install WSL distribution:**
   <pre class="nje-cmd-one-line-sm-indent1"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz"  </pre>
-- Create docker base container
+
+- **Configure WSL distribution:**
+  <pre class="nje-cmd-multi-line-sm">
+  # Start WSL and run these commands inside it:
+  wsl -d Ubuntu-docker-App-X11-Win32Dev
+  
+  # Update and install Docker CLI
+  apt update && apt upgrade -y
+  apt update && apt install docker.io -y
+  
+  # Configure DISPLAY variable
+  export DISPLAY=$(grep -oP "(?<=nameserver ).+" /etc/resolv.conf):0
+  
+  # Add to bashrc for persistence
+  cat >> ~/.bashrc << 'EOF'
+  # Auto-start Docker daemon
+  if (! pgrep -x "dockerd" > /dev/null); then
+    sudo dockerd &
+  fi
+
+  # Custom prompt
+  PS1="\[\033[91m\]WSL:\[\033[0m\]\[\033[0;33m\]\${debian_chroot:+($debian_chroot)}\u\[\033[0m\]:\[\033[91m\] App-X11-Win32Dev \[\033[0m\]../\W# "
+  EOF
+  
+  # Reload configuration
+  source ~/.bashrc
+  exit
+  </pre>
+
+- **Create docker base container**
    <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_app_forward_x11_win32_base.yml up -d --build --force-recreate  --remove-orphans </pre>
 - Install C sub-container
    <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_win32-c_project.yml up -d  --remove-orphans --build --force-recreate  </pre>
@@ -710,7 +741,7 @@ If you have previously installed this container, you can use the quick setup ste
   # WSL integration is enabled in Docker settings!
   </pre>
 
-After this you should be able to open the container in VSC and start developing
+After this you should be able to open the container in VSC and start developing (see [section 4](#4-develop-with-vsc-in-the-host) for detailed VSC setup instructions)
 
 </details>
 
