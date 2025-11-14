@@ -175,7 +175,9 @@ For the rest of this installation we need the WSL Ubuntu manual installation fil
 <div class="nje-br3"> </div>
 
 ### 2.1.2 Install the Ubuntu WSL version
+
 When we have the distribution source, we can install the WSL environment. To keep the Base Container files in one place we do this in the root of our Base-Service folder ( **'./Base-Container/Afx-BaseWin32-Service/wsl2distro'***).
+
 - **Open** in the sub folder: ***'.\Base-Container\Afx-Base-Win32-Service\'*** a CMD prompt.
 - **Execute** this command and replace the ***"install.tar.gz.file"*** with the result from the previous step(full path)
   <pre class="nje-cmd-one-line-sm-indent1"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz" </pre>
@@ -183,21 +185,32 @@ When we have the distribution source, we can install the WSL environment. To kee
   
    <pre class="nje-cmd-multi-line-sm">
   # Check commands:
-wsl --list --verbose    # Displays the distribution name, state, and there version
-wsl --unregister YourDistributionName       # Remove the distribution
-                                              # More WSL command in the next paragraph </pre>
+  
+  # Displays the distribution:
+  wsl --list --verbose
+
+  # Remove the distribution
+  wsl --unregister YourDistributionName
+  
+  # More WSL command in the next paragraph 
+  
+</pre>
 
 ### 2.1.3 Configure the Ubuntu WSL version
 
 - To start and manage your WSL2 Ubuntu distribution, use the following command:
 
 <pre class="nje-cmd-multi-line-sm-indent4" style="margin-top:-14px;">
-wsl -d Ubuntu-docker-App-X11-Win32Dev     #  This will open a CLI terminal and start the WSL if needed
-                                          #  Use 'exit' to return to Windows. while it remains started
-wsl --list --verbose                      #  Optional. Check if it is running (in other Windows CMD)
-wsl --terminate Ubuntu-docker-App-X11-Win32Dev    #  Stops the distribution
-wsl -d Ubuntu-docker-App-X11-Win32Dev -- ls /home #  Start, exec command, and returns direct(no CMD)
-wsl --set-default Ubuntu-docker-App-X11-Win32Dev  #  Set default when running command; wsl
+#  This will open a CLI terminal and start the WSL if needed
+#  Use 'exit' to return to Windows. while it remains started
+wsl -d Ubuntu-docker-App-X11-Win32Dev
+
+#  Stops the distribution
+wsl --terminate Ubuntu-docker-App-X11-Win32Dev
+#  Start, exec command, and returns direct(no CMD)
+wsl -d Ubuntu-docker-App-X11-Win32Dev -- ls /home
+#  Set default when running command; wsl
+wsl --set-default Ubuntu-docker-App-X11-Win32Dev  
 
 </pre>
 
