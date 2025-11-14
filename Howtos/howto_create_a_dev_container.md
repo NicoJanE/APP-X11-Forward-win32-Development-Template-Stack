@@ -29,6 +29,7 @@ RefPages:
 This is a Linux-based Docker cross-compiler environment for developing **Windows Win32 GUI applications** (C/C++) on a Windows host. The setup enables you to build, debug, and display Win32 applications within a Docker container while viewing the graphical output on your Windows desktop.
 
 **What You'll Build:**
+
 - A complete Win32 development environment running in Docker Desktop on Windows
 - X11 forwarding setup to display GUI applications from containers on your Windows host
 - Full debugging support with Visual Studio Code integration
@@ -44,7 +45,7 @@ Docker containers are headless (no GUI support), so we need a method to display 
 
 **Architecture Overview:**
 
-```
+<pre class="ascii-diagram">
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │ Windows Host                                                                    │
 │  ┌──────────────┐           ┌───────────────────────────────────────────┐       │
@@ -66,11 +67,12 @@ Docker containers are headless (no GUI support), so we need a method to display 
 │  │  └───────────────────────────────────────────────────┘   │                   │
 │  └──────────────────────────────────────────────────────────┘                   │
 └─────────────────────────────────────────────────────────────────────────────────┘
-```
+</pre>
 
 <sup>1</sup>**Why the WSL2 Setup is Unique:**
 
 You'll install Docker CLI tools **inside WSL2** (not to run containers there, but to communicate with Docker Desktop). This is necessary because:
+
 - **Docker Desktop** runs the containers with the Win32 toolchain
 - **WSL2** acts as a bridge - it has the Docker CLI to control containers and the `DISPLAY` variable configured to route X11 traffic to VcXsrv
 - When you start containers from a specific WSL distribution, you ensure the correct `DISPLAY` configuration is used for X11 forwarding

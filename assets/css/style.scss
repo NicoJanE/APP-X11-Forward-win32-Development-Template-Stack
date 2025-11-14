@@ -1,10 +1,13 @@
 ---
+# This is emptyfront matter, just tells Jekyll to process the file
+# Compiled CSS will have this comment
 ---
 
+/* Jekyll will process {{ site.theme }} into the actual theme name */
 @import "{{ site.theme }}";
 
 :root{
-  --nje-font-size: medium
+  --nje-font-size: medium;
 	--font-style: normal; 	/* normal, bold*/
 	--line-thickness: 3px;	/* original intent line thickness , that's why 3px is default */
   --nje-ident: 20px;      /* ident x pixels*/
@@ -1619,3 +1622,20 @@ Next the collapsisble boxes that are base on the 'nje-box*' mixings
     display: block;
     height: 2.0em; /* Extra-large break: ~80% of typical <br> visual spacing */
   }
+
+/* ASCII diagram specific styling - only affects elements with this class */
+.ascii-diagram {
+    font-family: 'Courier New', Courier, 'Liberation Mono', 'Lucida Console', monospace !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+    white-space: pre !important;
+    overflow-x: auto !important;
+    letter-spacing: 0px !important;
+    word-spacing: 0px !important;
+}
+
+.ascii-diagram code {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
