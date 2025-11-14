@@ -510,7 +510,7 @@ By default, this sub-container creates a typical Win32 C Desktop application pro
 After running the commands in 3.1.1, you can start the **C Win32 sub-container** in combination with the WSL. See the **side note: Start Docker via WSL** if you need help with this. Once started, you can use Visual Studio Code (VSC) to start developing the application. For help with VSC, see Section 4. Here are the steps in short to start/attach to the container:
 
 - In an OS Terminal: Start the WSL and attach Docker in the WSL:
-  <pre class="nje-cmd-multi-line">
+  <pre class="nje-cmd-multi-line-sm">
 
   wsl -d Ubuntu-docker-App-X11-Win32Dev
 
@@ -708,7 +708,7 @@ If you have previously installed this container, you can use the quick setup ste
   docker exec -it afx-x11-forward-win32-c-service-axf-win32-c-1 /bin/bash
   # If the container cannot be found, restart the Docker app and ensure
   # WSL integration is enabled in Docker settings!
-</pre>
+  </pre>
 
 After this you should be able to open the container in VSC and start developing
 
