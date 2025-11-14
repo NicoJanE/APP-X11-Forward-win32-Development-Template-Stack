@@ -7,7 +7,8 @@ A Docker Template Stack Container for **Cross-Compiling Win32** GUI Projects.
 The output of the GUI application is forwarded from the Linux container to the X11 server on the host (**XLaunch**). Win32 C applications can be created using the MinGW API. Additionally, the GUI application can be run in Linux by utilizing the **Wine** environment, and the output from Wine is forwarded to the X11 server on the Windows host.
 
 For more Setup information and details , visit the [main documentation page](https://nicojane.github.io/APP-X11-Forward-win32-Development-Template-Stack/index.html).
-<br>
+<br> <br>
+
 
 <p align="center">
   <a href="https://nicojane.github.io/Docker-Template-Stacks-Home/">
