@@ -396,7 +396,7 @@ pre.nje-source-block {
 	padding: 7px 8px; 		/* Similar padding to nje-cmd-one-line-sm-ident variants */
 	position: relative; 	/* Required for positioning pseudo-elements */
 	display: block; 		/* Block layout allows natural multi-line flow */
-	white-space: pre-wrap; 	/* Preserves line breaks and allows wrapping */
+	white-space: pre; 	
 }
 
 .nje-cmd-multi-line-sm {
