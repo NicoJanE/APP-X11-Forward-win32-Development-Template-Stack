@@ -10,7 +10,7 @@ For more Setup information and details , visit the [main documentation page](htt
 <br> <br>
 
 > **Announcement:** <br>
-*This container has been updated and reviewed(nov 2025) Next the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** will be integrated into this componentAfter that the component **App X11 Forward GUI Cross-Compiling Win32 C++** will be declared  deprecated and will be removed in the future* <br>
+*This container has been updated and reviewed(nov 2025) the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** HAS been integrated into this component.That means the component **App X11 Forward GUI Cross-Compiling Win32 C++** is declared **deprecated** and will be removed in the future* <br>
 
 <hr>
 

@@ -37,14 +37,14 @@ In addition to the base container, which is required, the actual Win32 C project
     <span class="nje-column1-value">Win32 C Cross Compilation</span>
     <span class="nje-column2-desc">Development environment for Win32 MINGW C development projects, includes a Win32 C template project. </span>
     <span class="nje-column3-button"> 
-        <a href="howto_create_a_dev_container.md#31-creating-a-win32-c-development-sub-container-afx-x11-forward-win32-c-service">3.1 Creating a Win32 C development sub-container</a>Setup Guide</a>
+        <a href="./Howtos/howto_create_a_dev_container#31-creating-a-win32-c-development-sub-container-afx-x11-forward-win32-c-service">Setup Guide</a>
     </span>
 </span>
 <span class="nje-table-row">
     <span class="nje-column1-value">Win32 C++ Cross Compilation</span>
     <span class="nje-column2-desc">Development environment for Win32 C++ MINGW development projects, includes a Win32 C++ template project. </span>
     <span class="nje-column3-button"> 
-       <a href="howto_create_a_dev_container.md#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service">3.2 Creating a Win32 CPP development sub-container</a>Setup Guide</a>
+       <a href="./Howtos/howto_create_a_dev_container.md#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service">Setup Guide</a>
     </span>
 </span>
  </div>
