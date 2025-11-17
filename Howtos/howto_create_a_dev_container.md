@@ -150,39 +150,38 @@ Before executing the Docker Compose file, ensure that the following items are in
 
 ### Download the  WSL version of Ubuntu
 
-For the rest of this installation we need the WSL Ubuntu manual installation files. Use the procedure in the ***Get the WSL Installation file*** to get the required installation file: ***'install.tar.gz'*** 
+For the rest of this installation we need the WSL Ubuntu manual installation files. Use the procedure in the ***Get the WSL Installation file*** to get the required installation file: ***'install.tar.gz'***
 
 <details class="nje-back-box">
   <a name="manual-wsl"></a>
   <summary>Get the WSL Installation file🔧
   </summary>
 
-### Download the WSL packages
+### Download the WSL Import file
 
 - From [here](https://learn.microsoft.com/en-us/windows/wsl/install-manual).
-- Scroll to the *"Downloading distributions" section.
-- Download the Ubuntu 24.04 `.AppxBundle` (this guide assumes this version).
-- Unpack the package, like, assuming you downloaded `Ubuntu2404-240425.AppxBundle`:
+- Scroll to the **"Downloading distributions"** section.
+- Download the **Ubuntu 24.04 LTS** (should result into a file called: ***'Ubuntu2404-240425.AppxBundle'***)
+- Unpack and get the installation from it in the next section
 
-### Get the right **WSL Import** file
+#### After getting the **WSL Import** file, get the installation from it
 
-- Rename `Ubuntu2404-240425.AppxBundle` to `Ubuntu2404-240425.zip`
+- Rename <span class="nje-cmd-inline-sm">Ubuntu2404-240425.AppxBundle</span> to <span class="nje-cmd-inline-sm">Ubuntu2404-240425.zip</span>
 - Unpack it using 7zip or similar
-- Find  `Ubuntu_2404.0.5.0_x64.appx` 
-  - Rename it to: `Ubuntu_2404.0.5.0_x64.zip` unpack it.
-  - Unpack it.  
-**Result** you'll get the file: `install.tar.gz` this is what you’ll use in the next step,
+- Find  <span class="nje-cmd-inline-sm">Ubuntu_2404.0.5.0_x64.appx</span>
+  - Rename it to: <span class="nje-cmd-inline-sm">Ubuntu_2404.0.5.0_x64.zip</span> and unpack it.
+  - **Unpack Result** you'll get the file: <span class="nje-cmd-inline-sm">.\Ubuntu_2404.0.5.0_x64\install.tar.gz</span> this is what you’ll use in the next step,
 
 <p align="center" style="padding:20px;">─── ✦ ───</p>
 </details>
 <div class="nje-br3"> </div>
 
-### 2.1.2 Install the Ubuntu WSL version
+### Install the Ubuntu WSL version
 
 When we have the distribution source, we can install the WSL environment. To keep the Base Container files in one place we do this in the root of our Base-Service folder ( **'./Base-Container/Afx-BaseWin32-Service/wsl2distro'***).
 
-- **Open** in the sub folder: ***'.\Base-Container\Afx-Base-Win32-Service\'*** a CMD prompt.
-- **Execute** this command and replace the ***"install.tar.gz.file"*** with the result from the previous step(full path)
+- **Open** a Powershell CLI in the sub folder: ***'.\Base-Container\Afx-Base-Win32-Service\'***.
+- **Execute** this command and replace the ***"install.tar.gz.file"*** with your location (full path)
   <pre class="nje-cmd-one-line-sm-indent1"> wsl --import Ubuntu-docker-App-X11-Win32Dev ./wsl2-distro  "install.tar.gz" </pre>  
 
 <!-- markdownlint-disable-next-line MD022 -->
@@ -210,12 +209,14 @@ When we have the distribution source, we can install the WSL environment. To kee
   </pre>
 </div>
 
-### 2.1.3 Configure the Ubuntu WSL version
+### Configure the Ubuntu WSL version
 
 Now we need to update and configure our distribution. Start the WSL distribution and execute the following Linux commands:
 
-<pre class="nje-cmd-multi-line-sm-indent0" style="margin-top:-14px;">
+<span class="nje-colored-block" style="--nje-bgcolor:red; --nje-textcolor:yellow; ">
+ Note: For each step, select and run the entire numbered section—including all comments</span>
 
+<pre class="nje-cmd-multi-line-sm-indent0" style="margin-top:-14px;">
 # 1.1                                   # Update the Ubuntu distribution
 apt update && apt upgrade -y            
 
@@ -255,14 +256,14 @@ EOF
 
 # 4 Reload the configuration to apply the changes
 source ~/.bashrc   # Reload, enter
- # check with: ps -a  should show dockerd
+# check with: ps aux | grep dockerd  # should show dockerd
 
 # Optional to logout and leave the wsl running
 exit
 
 </pre>
 
-### 2.1.4 Install the X-Server (VcXsrv)
+### Install the X-Server (VcXsrv)
 
 To install the X-Server in the Windows host, and receive graphical output from the WSL application, follow these instructions:
 
@@ -273,7 +274,7 @@ To install the X-Server in the Windows host, and receive graphical output from t
   - Ensure that **Clipboard** and **Native opengl** are **enabled**'
   - Ensure that **Disable access control** is **not enabled** ( this is more secure; only enable it if you encounter issues) click **Next**, then **Finish**
 
-### 2.1.5 Create the basic Docker Container
+### Create the basic Docker Container
 
 Finally, to create an start the base container.
 
@@ -283,7 +284,7 @@ Finally, to create an start the base container.
 
 <pre class="nje-cmd-multi-line-sm-indent4" style="margin-top:-14px;"> FIXED_SUBNET  # Default: 172.16.0.0/16            FIXED_IP      # Default: 172.16.0.18</pre>
 
-- Execute this command in the service sub folder
+- Execute this PowerShell command in the ***'Afx-Base-Win32-Service sub folder'***
   <pre class="nje-cmd-one-line-sm-indent1"> docker-compose -f compose_app_forward_x11_win32_base.yml up -d --build --force-recreate  --remove-orphans </pre>
 
 <div class="nje-expect-multi-lines-indent2">
@@ -318,7 +319,7 @@ Finally, to create an start the base container.
 </details>
 <span class="nje-br"> </span> 
 
-### 2.1.6 Start Docker from the WSL Distribution
+### Start Docker from the WSL Distribution
 
 **The Problem:** When running multiple WSL distributions, Docker Desktop's automatic integration (Settings → Resources → WSL integration) cannot reliably control which distribution is used—Docker may randomly select any enabled distribution.
 
@@ -326,17 +327,22 @@ Finally, to create an start the base container.
 
 **Why Both Are Needed:**
 
-- **Docker Desktop WSL Integration** (collapsible section below): Enables the Docker CLI in WSL to communicate with Docker Desktop's daemon on the Windows host
-- **Starting from Specific WSL** (this section): Ensures the correct WSL distribution is used—the one with the properly configured `DISPLAY` variable for X11 forwarding to VcXsrv
-
-><small>*Important*{: style="color: red;"} You **must enable** WSL integration in Docker Desktop settings (see collapsible section below) AND use the specific WSL startup procedure described here. The integration allows communication between WSL and Docker Desktop, while the explicit startup ensures X11 forwarding uses the correct WSL environment. Execute the integration steps and restart Docker Desktop before proceeding.</small>
-
 ## Prerequisites
 
-1. **Restart Docker Desktop** (the application, not just the container) to avoid connection issues
+1. **Enable WSL integration in Docker Desktop settings**
+   - Go to Docker Desktop → Settings → Resources → WSL integration
+   - Select your WSL distribution (e.g., `Ubuntu-docker-App-X11-Win32Dev`) and ensure only this one is enabled
+   - Click Apply & Restart to activate the integration (this may restart Docker Desktop automatically)
+   - This step is essential for communication between WSL and Docker Desktop
+
+2. **Restart Docker Desktop** (the application, not just the container) if it did not restart automatically
    - Without this, you may run into trouble when attaching from WSL
    - Error symptom: ***"cannot find the container"***
-2. **Ensure the container is running** in Docker Desktop (check the dashboard)
+
+3. **Ensure the container is running** in Docker Desktop (check the dashboard)
+
+4. **Use the specific WSL startup procedure described below**
+   - Always start containers from the correct WSL distribution to ensure X11 forwarding works
 
 ## Steps to Connect
 
@@ -345,11 +351,11 @@ Execute these commands to attach to the container from the correct WSL distribut
 <span class="nje-ident"></span> <small>(Assumes default service name and WSL distribution name from previous steps)</small>
 
   <pre class="nje-cmd-multi-line-sm-indent0"> 
-  # Step 1: Start the specific WSL distribution
+  # Step 1: Start the specific WSL distribution using the PowerShell CLI
   # (Docker daemon inside WSL will start automatically - press Enter a few times if needed)
   wsl -d Ubuntu-docker-App-X11-Win32Dev
   
-  # Step 2: From within the WSL, attach to the Docker container running on the host
+  # Step 2: From within the WSL CLI, attach to the Docker container running on the host
   # (Use 'docker ps' from the host to verify the container name if you changed it)
   docker exec -it afx-base-win32-service-axf-basic-win32-service-1 /bin/bash
   
@@ -361,33 +367,38 @@ Execute these commands to attach to the container from the correct WSL distribut
     - Open the Docker container in **VSC**, with the correct WSL assigned (see section 4)  
   
 <details class="nje-back-box">
-  <summary>Alternative: Docker Desktop WSL Integration Settings
+
+  <summary>Docker Desktop WSL Integration: Required Setup & Workflow Choice
   </summary>
 
-## When to Use This Method
+## WSL Integration Is Required
 
-This procedure is **optional and less reliable** when using multiple WSL distributions. Since we start the Docker container directly from a running WSL distribution (as described in section: 'Start Docker from the WSL Distribution'), this alternative approach is unnecessary for our setup.
+Enabling WSL integration in Docker Desktop is **always required** for this development environment. This allows Docker Desktop to communicate with your WSL distributions and containers.
 
-**Use this method only if:**
+## Two Workflows: Recommended vs. Automatic
 
-- You're **not** starting containers from within WSL
-- You're using a limited number of WSL distributions (or just the default)
-- You prefer Docker Desktop's automatic integration
+**1. Recommended Workflow (for most users, especially with multiple WSLs):**
+- Enable WSL integration in Docker Desktop (see steps below)
+- Start containers directly from your chosen WSL distribution (using `wsl -d <distro>` and Docker CLI)
+- This ensures predictable behavior and correct X11 forwarding.
 
-**Limitation:** When multiple WSL distributions are integrated with Docker Desktop, Docker may randomly select any enabled distribution. If a default WSL is configured, it will be used automatically—but this is less predictable than our recommended approach.
+**2. Automatic Selection Workflow (not recommended, only for single/default WSL setups):**
+- Enable WSL integration in Docker Desktop
+- Let Docker Desktop automatically select the WSL distribution when starting containers
+- This can be unpredictable if multiple WSLs are enabled, as Docker may randomly select one.
 
-## Configuration Steps
+**Limitation:** With multiple WSL distributions enabled, Docker Desktop may select any of them, leading to confusion or broken setups. Always prefer the recommended workflow above.
 
-To enable Docker Desktop's WSL integration for this distribution:
+## How to Enable WSL Integration
 
 1. Open **Docker Desktop** → **Settings** → **Resources** → **WSL integration**
 2. In the **'Enable integration with additional distros:'** section:
-   - If you don't see this option, click **Refetch distros**
-   - Locate and select **`Ubuntu-docker-App-X11-Win32Dev`**
-   - **Ensure only this distribution is selected** (disable others to avoid conflicts)
+  - If you don't see this option, click **Refetch distros**
+  - Locate and select **`Ubuntu-docker-App-X11-Win32Dev`**
+  - **Ensure only this distribution is selected** (disable others to avoid conflicts)
 3. Click **Apply & Restart**
-   - Docker Desktop should restart automatically
-   - You may need to manually restart the container if it doesn't reconnect
+  - Docker Desktop should restart automatically
+  - You may need to manually restart the container if it doesn't reconnect
 
 **Troubleshooting:** If clicking "Apply & Restart" doesn't take effect, try running Docker Desktop with **Administrator rights**, then repeat the steps above.
 
@@ -395,7 +406,7 @@ To enable Docker Desktop's WSL integration for this distribution:
 
 ### 2.1.7 Verify the Setup
 
-After running the command in 2.1.5 and 2.1.6 we can test if the setup **succeeded**. Make sure the docker container is started from our WSL (see 2.1.6 above)
+After running the command in section 'Create the basic Docker Container' and section 'Start Docker from the WSL Distribution' we can test if the setup **succeeded**. Make sure the docker container is started from our WSL (see: [Start Docker from the WSL Distribution](start-docker-from-the-wsl-distribution) )
 
 #### Verify the X Output
 
@@ -406,9 +417,8 @@ After running the command in 2.1.5 and 2.1.6 we can test if the setup **succeede
 #### Verify the build environment (optional)
 
 - Use the **'nano'** command to create a new file **'hello.c'** with this content:
-  <pre class="nje-cmd-multi-line-sm">
-  #include &lt;windows.h&gt;
-  int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
+  <pre class="nje-cmd-multi-line-sm">  #include &lt;windows.h&gt;
+  int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
   {
           MessageBox(NULL, "Hello, Win32!", "Win32 Program", MB_OK);
           return 0;
@@ -416,10 +426,11 @@ After running the command in 2.1.5 and 2.1.6 we can test if the setup **succeede
   </pre>
 
 - Check if we can build the program:
-  <pre class="nje-cmd-multi-line-sm"> BUILD: i686-w64-mingw32-gcc hello.c -o out.exe       # Creates 32 bits App
- #BUILD: x86_64-w64-mingw32-gcc hello.c -o out.exe    # Creates 64 bits App
- #BUILD: i686-w64-mingw32-c++ hello.c++ -o out.exe    # Creates 32 bits App
- #BUILD: x86_64-w64-mingw32-gcc hello.c++ -o out.exe  # Creates 64 bits App </pre>
+  <pre class="nje-cmd-multi-line-sm"># BUILD Commands:
+i686-w64-mingw32-gcc hello.c -o out.exe       # Creates 32 bits App
+# x86_64-w64-mingw32-gcc hello.c -o out.exe    # Creates 64 bits App
+# i686-w64-mingw32-c++ hello.c++ -o out.exe    # Creates 32 bits App
+# x86_64-w64-mingw32-gcc hello.c++ -o out.exe  # Creates 64 bits App </pre>
   
 - And finally check if it runs
     <pre class="nje-cmd-multi-line-sm">wine ./out.exe</pre>
@@ -492,7 +503,7 @@ By default, this sub-container creates a typical Win32 C Desktop application pro
 
 #### 3.1.1 Steps to Create a win32 C application container
 
-1. Open a Command Prompt in: ***.\Sub-Containers\Afx-X11-Forward-win32-c-Service\\***
+1. Open a Command PowerShell CLI in: ***.\Sub-Containers\Afx-X11-Forward-win32-c-Service\\***
 2. **Configure the project**:
    - Open the ***.env*** file to adjust the necessary settings:
      - **Project Name**: Set the variable **PRJ_NAME_ARG** to your desired project name. This will be used for both the project name and the project directory. If omitted, the default value will be used.
@@ -533,7 +544,7 @@ pwd                        # Should displays your project directory including so
 source ./set_env.sh        # Set the environment variables from the file ***.env*** in ~/.bashrc
 make all                   # Should generate executable out32.exe in _make_out
 wine _make_out/app.exe   # Should display the application (running for the first time takes a while)
-make -fmakefile64 all      # Should generate executable out64.exe in _make_out
+make -fmakefile64 all      # Should generate executable out64.exe in _make_out/64
 win64e _make_out/64/app.exe   # Should display the application (running for the first time takes a while)
 
 # Alternatively you may use cmake to build the app
@@ -545,7 +556,7 @@ cmake --build . --target out32 -- VERBOSE=1 # Alternatively, be specific and use
 wine bin/out32.exe              # Execute it
 wine64 bin/64/out64.exe         # or in case of 64 bits version
  </pre>
-Yes indeed, your development would be in VSC or another chosen IDE, but this should prove you that all works.
+Yes, your development will typically be in Visual Studio Code or another IDE, but these CLI steps should demonstrate that everything is working correctly.
 
 </div>
 <div class="nje-br3"> </div> 
@@ -597,11 +608,10 @@ First ensure you have the following extensions installed locally to work with Do
 - **Docker** (Microsoft)
 - **Dev Containers** (Microsoft) optional
 
-
 ### 4.1. Open the C application container in VSC (@host)
 
-- Make sure Docker is attached from the WSL! See [here]( #312-attach-to-the-win32-c-application-container)
-- Press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
+- **Make sure** Docker is attached from the WSL! See [here]( #312-attach-to-the-win32-c-application-container)
+- Within Visual Studio Code,press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
 - Select our **afx-x11-forward-win32-c-service-afx-win32-c-1** container
 - Alternatively you might click on the **Docker boot** on the left toolbar and select the container from there.  
 This opens a new Window with the  container information
@@ -609,7 +619,7 @@ This opens a new Window with the  container information
 ### 4.2. Open Folder and building your app.
 
 - Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
-- Select Open Folder and enter: **/projects/win32_c/default_prj**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
+  - Select Open Folder and enter: **/projects/win32_c/default_prj**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
 
 <details class="nje-note-box">
   <summary> Recommend extensions
@@ -693,7 +703,7 @@ If you have previously installed this container, you can use the quick setup ste
 
 **Prerequisites:**
 
-- Make sure **VcXsrv** is installed and configured (see [section 2.1.4](#214-install-the-x-server-vcxsrv) if needed)
+- Make sure **VcXsrv** is installed and configured (see [section 'Install the X-Server (VcXsrv)'](#install-the-x-server-vcxsrv) if needed)
 - Ensure you have the **install.tar.gz** file (see [Get WSL Installation file](#manual-wsl) if needed)
 
 - **Install WSL distribution:**

@@ -9,6 +9,10 @@ The output of the GUI application is forwarded from the Linux container to the X
 For more Setup information and details , visit the [main documentation page](https://nicojane.github.io/APP-X11-Forward-win32-Development-Template-Stack/index.html).
 <br> <br>
 
+> **Announcement:**{: style="color: blue;font-size:12px; "} <br>
+*This container has been updated and reviewed(nov 2025) Next the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** will be integrated into this componentAfter that the component **App X11 Forward GUI Cross-Compiling Win32 C++** will be declared  deprecated and will be removed in the future{: style="color: Darkgray;font-size:12px; "}* <br>
+
+<hr>
 
 <p align="center">
   <a href="https://nicojane.github.io/Docker-Template-Stacks-Home/">
