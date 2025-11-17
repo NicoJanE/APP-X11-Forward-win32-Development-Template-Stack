@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.makefile-tools",
+        "xyz.local-history",
+        "isotechnics.commentlinks",
+        "shd101wyy.markdown-preview-enhanced"
+
+    ],
+   "unwantedRecommendations": []
+}

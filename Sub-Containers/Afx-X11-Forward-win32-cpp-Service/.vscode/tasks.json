@@ -1,0 +1,136 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+          "label": "AFX: Fix Env Vars in Launch",
+          "detail": "Copies from launch.tmpl and merges .env variables into it",
+          "type": "shell",
+          "command": "source ${workspaceFolder}/set_env.sh",  // 
+          "problemMatcher": []
+      },
+      {
+          "label": "AFX: build 32 ALL",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile",
+              "all"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+      {
+          "label": "AFX: build 32 Debug",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile",
+              "out32_debug"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+      {
+          "label": "AFX: build 32 Release",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile",
+              "out32"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+      {
+          "label": "AFX: build 64 ALL",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile64",
+              "all"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+      {
+          "label": "AFX: build 64 Debug",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile64",
+              "out64_debug"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+      {
+          "label": "AFX: build 64 Release",
+          "type": "shell",
+          "command": "make",
+          "args": [
+              "-f",
+              "makefile64",
+              "out64"
+          ],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": "build",
+          "detail": "Builds the project using make and MinGW"
+      },
+  
+      {
+          "label": "AFX: Run All Tasks",
+          "dependsOn": [            
+              "AFX: build 64 ALL",
+              "AFX: build 32 ALL",   
+          ],
+          "group": "build",
+          "presentation": {
+              "reveal": "always",
+              "echo": true,
+              "focus": false,
+              "panel": "shared"
+          }
+      }
+        
+    ]
+  }

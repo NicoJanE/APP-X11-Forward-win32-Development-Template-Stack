@@ -1,0 +1,134 @@
+# This file is part of: App-X11-Forward-win32-C-Development-Template-Stack
+# Copyright (c) 2024 Nico Jan Eelhart
+#
+# This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
+#
+
+# *** Extending/Chaining ***
+# This requires that the base image is build()        
+#        - In the folder: '../../Afx-Base-Win32-Service'  Execute:   
+#          docker build -t eelhart/appforwardx11-win32-base:latest -f Dockerfile_App-Forward-X11-Win32_Base .
+#
+#           This will create the image but ***NOT*** the network. So it is better to build and create  
+#           the whole container with:
+#               docker-compose -f compose_app_forward_x11_win32_base.yml up -d --build
+#           After that the image is present and the container,you can delete the container after this
+#
+# FROM eelhart/appforwardx11-win32-cpp-base:latest     
+FROM eelhart/appforwardx11-win32-base:latest
+
+# For GUI forwarding
+ENV DISPLAY=host.docker.internal:0
+
+# Install necessary packages 
+# 
+RUN apt-get update && apt-get install -y \
+    rsync \
+    cmake \
+    ninja-build \
+    git \
+	gdbserver \
+	zip \
+    unzip \
+	pkg-config \
+    gdb-multiarch
+
+
+# Install  vcpkg repository and bootstrap it
+# Usage: vcpkg install <library-name>
+RUN git clone https://github.com/microsoft/vcpkg.git /vcpkg && \
+    cd /vcpkg && \
+    ./bootstrap-vcpkg.sh
+	
+ENV PATH="/vcpkg:${PATH}"
+
+
+# Use the vcpkg and install gtest
+# When using add inlcude directorie(-I) and the  library(-L) in the makefile
+RUN vcpkg install gtest
+
+# Install the VS Code debugger
+# RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+
+# Set the WINEPATH needed to locate Windows DLL files, 32 Bits and 64 Bits
+# Make sure to set this in the Windows style, so wine gets it (Z:\\...) 
+# 	When an app can not find the dll, use the command:
+#		find / -name "xyz"
+#	To look for it if it returns the file, add the path to that file to the WINEPATH below
+#
+ENV WINEPATH="Z:\\usr\\lib\\gcc\\i686-w64-mingw32\\13-win32;Z:\\usr\\lib\\gcc\\x86_64-w64-mingw32\\13-win32"
+ 
+
+
+# 1) Set the working directory
+WORKDIR /projects
+
+# 2) Set arguments, MAKE SURE the environment variables are assigned here (file:.env) so there available.
+ARG PRJ_NAME_ARG
+ENV PRJ_NAME_ARG=${PRJ_NAME_ARG}
+ARG PRJ_BASE_ARG
+ENV PRJ_BASE_ARG=${PRJ_BASE_ARG}
+
+ENV DISPLAY=host.docker.internal:0
+ARG PRJ_TYPE_USE_CUSTOM_APP
+
+# 3) Define build-time argument and use the build argument as an environment variable available at runtime
+ARG PORT_ARG
+ENV PORT=${PORT_ARG}
+EXPOSE ${PORT}
+
+# 4) Output to user the parameters which will be used (Use the shell form explicitly to ensure environment variable expansion)
+RUN echo "    - Win32 C project Name: ${PRJ_BASE_ARG}/${PRJ_NAME_ARG} for Win32 C application"
+RUN /bin/sh -c "mkdir -p ${PRJ_BASE_ARG}"
+WORKDIR ${PRJ_BASE_ARG}
+
+# 4.1) Remove the existing my-react-app directory if it exists. We don't want this. Docker will complain if directory exists.
+
+# 5) Config information(port, host)
+#COPY /.env ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/.env   find ../src -name '*.c' | sed 's/^..//'
+
+# 6) Visual Studio Code Settings and extensions for this container
+COPY .vscode/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/.vscode/
+COPY .devcontainer/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/.devcontainer/
+
+
+# 7) Create a Win32 project based one  of our templates
+RUN mkdir -p ${PRJ_BASE_ARG}
+WORKDIR ${PRJ_BASE_ARG}
+#
+
+# Copy the necessary files from the build context into the Docker image
+# Otherwise we can not reach the files via the script below
+COPY Project-Templates/ ${PRJ_BASE_ARG}/Project-Templates/
+
+
+# Make sure we easily can identify the terminal session
+RUN echo 'PS1="\[\033[1;37;46m\]Docker:\[\033[0m\]\[\033[0;33m\]${debian_chroot:+($debian_chroot)}\u\[\033[0m\]:\[\033[1;36m\] Afx-Win32_CPP \[\033[0m\]../\W# "' >> ~/.bashrc
+
+
+# Use conditional logic to handle different scenarios.
+#
+# Note: rsync will automatically create the destination directory and sub Dir's 
+#       if it doesn’t exist (use '-a' and add '/'' to last target dir)
+#
+RUN if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Yes" ]; then \
+       echo "Custom app mode is enabled, do copy"; \       
+	   mkdir -p ${PRJ_NAME_ARG}/_build; \	   
+       rsync -a Project-Templates/GUI-Application/resource/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/resource/;  \       
+       rsync -a Project-Templates/GUI-Application/src/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/src/;  \
+       rsync -a Project-Templates/GUI-Application/doc/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/doc/; \
+       rsync -a Project-Templates/GUI-Application/headers/ ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}/headers/;  \
+       rsync -a Project-Templates/GUI-Application/_backup ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
+       rsync -a Project-Templates/GUI-Application/makefile* ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
+       rsync -a Project-Templates/GUI-Application/CMakeLists.txt ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \       
+       rsync -a Project-Templates/GUI-Application/*.sh ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \
+       rsync -a Project-Templates/GUI-Application/.env ${PRJ_BASE_ARG}/${PRJ_NAME_ARG}; \       
+    else \
+       if [ "$PRJ_TYPE_USE_CUSTOM_APP" = "Alternative_1" ]; then \
+           echo "    - 'Alternative 1' project, Name: ${PRJ_BASE_ARG}/${PRJ_NAME_ARG} GUI based application )"; \           
+       else \
+           echo "\n\n\n\nRemark no template is copied! . Nothing to do\n\n"!!; \
+       fi \
+    fi
+     

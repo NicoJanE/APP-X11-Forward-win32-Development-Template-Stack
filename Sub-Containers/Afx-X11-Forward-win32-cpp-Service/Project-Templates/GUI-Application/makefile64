@@ -1,0 +1,153 @@
+# This file is part of: App-X11-Forward-win32-Development-Template-Stack
+# Copyright (c) 2024 Nico Jan Eelhart
+#
+# This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
+
+# Call:
+#		 make out64
+
+# Application Environment variables (scope during debug sessions) from file: .env
+-include .env
+
+
+#export OUT
+
+# **Important** define the base header location, this make it easier to reference the header (i.e #include "views/Win32Template")
+# See CFLAGS, you can add additional header base files (i.e:header_comapi=../../com_prj/headers)
+headerbase = ./headers
+
+OUT = _make_out
+OBJDIR =$(OUT)/obj64
+# Use a pattern rule to ensure all *.o files are refering to the OBJDIR directory
+
+
+
+# C Compilers
+CC64_COMP = x86_64-w64-mingw32-g++
+
+# Resource compiler
+WINDRES64_COMP =x86_64-w64-mingw32-windres
+
+# Compiler flags: headers and define unicode
+CFLAGS_COMMON = -I$(headerbase) -DUNICODE -D_UNICODE
+
+
+# Library flags (generic)
+# for unicode version we must use the flag: -municode otherwise
+# you get error that the WinMain could not be found
+# Some other libaries win32 :
+# -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32  -lcomctl32 -lws2_32
+# -ladvapi32 netapi32  -lshscrap -lwinmm -limm32
+LDFLAGS_COMMON = -luser32 -lkernel32 -municode -mwindows
+
+
+
+# Get Header files: Instead of do the following:
+# CFLAGS = -I./headers -I./headers/views -I./headers/controls -I./headers/models
+# We use a shell command to discover all directory's all it's the sub directory's 
+CFLAGS_COMMON += $(shell find ./headers -type d | sed 's/^/-I/')
+
+# Get Source files: instead of using this:
+# SRC = $(wildcard ./src/*.c ./src/views/*.c ./src/controls/*.c ./src/models/*.c)
+# we let the find command search for all c files including sub directory's
+SRC = $(shell find ./src -name '*.cpp')
+
+# Define specific flags for debug and release
+CFLAGS_DEBUG = $(CFLAGS_COMMON) -g 
+CFLAGS_RELEASE = $(CFLAGS_COMMON)
+LDFLAGS_DEBUG = $(LDFLAGS_COMMON) -g 
+LDFLAGS_RELEASE = $(LDFLAGS_COMMON)
+
+
+# Define the .rc file to compile and resulting .res file 
+RC_FILE = ./resource/App.rc
+RES64_FILE = $(OUT)/App64.res
+
+
+OBJ64_FILES = $(SRC:.cpp=.o)
+# Use a pattern rule to ensure all *.o files are refering to the OBJDIR directory
+OBJ64_FILES_PREFIX_PATH = $(addprefix $(OBJDIR)/, $(OBJ64_FILES))
+
+
+# General dependency tasks, called by targets
+# ***************************************************************
+
+# PRE-BUILD 64 bits. Compile resource file
+$(RES64_FILE): $(RC_FILE)
+	$(WINDRES64_COMP) $(RC_FILE) -O coff -o $(RES64_FILE)
+
+	
+	
+# COMPILING source 64 bits
+CC = $(CC64_COMP)  # Default to 64-bit compiler
+%.o: %.cpp
+#	clear
+	@echo "\n\nCOMPILE STAGE: " 
+	@echo "\n\nplags: $(CFLAGS)\n\n"
+	@echo " -> @$(CC) $(CFLAGS) -c $< -o $(OBJDIR)/$@"
+	@$(CC) $(CFLAGS) -c $< -o $(OBJDIR)/$@	
+	
+# ***************************************************************
+	
+# ALL Targets
+# ---------------------------------------------------------------
+#.PHONY: .prepare
+
+.prepare_cleanscr:
+	clear	
+
+.prepare_dir:
+	mkdir -p $(OUT)/64
+
+# Create The same sub directorie structure in $(OBJDIR) as in ./src
+# Suppress output(@) unless explicitly instructed (echo)
+.prepare_obj_dir: 
+	@echo "\n\n\tPREPARE STAGE: Create obj sub directories as in ./src! "
+	@echo "\t- mkdir -p $(OBJDIR)"
+	@mkdir -p $(OBJDIR)
+	@echo "\t- find ./src -type d -exec mkdir -p $(OBJDIR)/{} \;"
+	@find ./src -type d -exec mkdir -p $(OBJDIR)/{} \;
+	           
+	
+
+all:   out64
+##################################################################
+
+
+# Target 64 bits Release
+# ---------------------------------------------------------------
+#
+# Let source know this is 32 bits version(for entry point)
+# Calls .prepare_* first
+out64: CC = $(CC64_COMP) 
+out64: CFLAGS = $(CFLAGS_RELEASE)
+out64: LDFLAGS = $(LDFLAGS_RELEASE)
+out64: .prepare_cleanscr .prepare_obj_dir .prepare_dir  $(OBJ64_FILES) $(RES64_FILE) 
+	@echo "\n\nLINK STAGE (Releaes):   -->  $(OUT)/$(APPLICATION_NAME) \n\t"
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)"
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME)
+
+##################################################################
+
+
+# Target 64 bits Debug
+# ---------------------------------------------------------------
+#
+# Let source know this is 32 bits version(for entry point)
+# Calls .prepare_* first
+out64_debug: CC = $(CC64_COMP)
+out64_debug: CFLAGS = $(CFLAGS_DEBUG)
+out64_debug: LDFLAGS = $(LDFLAGS_DEBUG)
+out64_debug: .prepare_cleanscr .prepare_obj_dir .prepare_dir $(OBJ64_FILES) $(RES64_FILE)
+	@echo "\n\nLINK STAGE (Debug): --> $(OUT)/$(APPLICATION_NAME_DBG) \n\t"
+	@echo " -> $(CC) $(OBJ64_FILES_PREFIX_PATH) $(RES64_FILE) $(LDFLAGS) -o  $(OUT)/64/$(APPLICATION_NAME_DBG)"	
+	@$(CC) $(OBJ64_FILES_PREFIX_PATH)  $(RES64_FILE) $(LDFLAGS) -o $(OUT)/64/$(APPLICATION_NAME_DBG)
+##################################################################
+
+
+# Clean up object files, resources, and the executable
+# ---------------------------------------------------------------
+clean: 
+	rm -rf $(OBJDIR) $(RES64_FILE) $(OUT)/64/$(APPLICATION_NAME) $(OUT)/64/$(APPLICATION_NAME_DBG)
+	
+##################################################################	

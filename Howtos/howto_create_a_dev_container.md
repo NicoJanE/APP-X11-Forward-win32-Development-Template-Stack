@@ -16,8 +16,10 @@ RefPages:
   - [Install the X-Server(client)](#214-install-the-x-server-vcxsrv)<br> 
   - [Create the base container](#215-create-the-basic-docker-container)<br> 
 - ***Sub Containers***
-  - [Create win32 C application container](#31-creating-a-win32-c-application-sub-container-afx-x11-forward-win32-c-service)<br> 
-  - [Attach to win32 C application container](#312-attach-to-the-win32-c-application-container)<br> 
+  - [Create win32 C development container](#31-creating-a-win32-c-development-sub-container-afx-x11-forward-win32-c-service)<br> 
+  - [Create win32 C++ development container](#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service)<br>
+  - [Attach to win32 C development container](#312-attach-to-the-win32-c-development-container)<br> 
+  - [Attach to win32 C++ development container](#322-attach-to-the-win32-cpp-development-container)<br> 
   - [Develop with VSC](#4-develop-with-vsc-in-the-host)<br>
   - [Appendix 1 Quick Setup](#appendix-1-quick-setup) <br><br>
 </div>
@@ -494,14 +496,14 @@ In the **Sub-Containers** folder, each sub-container is stored in a separate sub
 
 <div class="nje-br1"> </div>
 
-### 3.1 Creating a Win32 C application sub-container <small>(afx-x11-forward-win32-c-service)</small>
+### 3.1 Creating a Win32 C development sub-container <small>(afx-x11-forward-win32-c-service)</small>
 
-With this sub-container, we will create a GUI project for a classic **Win32** application using the **C language**. Note that for **C++** we have a dedicated component stack-container at [Win32 C++ Cross-Compiling ](https://nicojane.github.io/APP-X11-Forward-win32-CPP-Development-Template-Stack/)
+With this sub-container, we will create a GUI project for a classic **Win32** application using the **C language**. Note that for **C++** we have a Sub-Container, see section 3.2 below.
 
 By default, this sub-container creates a typical Win32 C Desktop application project. We currently provide only one template, but other specialized templates can be added. In the ***.env** file, the setting **PRJ_TYPE_USE_CUSTOM_APP=Yes** is used to install the template project. See Section 4 for the global usage of this container in Visual Studio Code (VSC). If there are any specifics regarding VSC, we will indicate them at the end of this section.
 <div class="nje-br1"> </div>
 
-#### 3.1.1 Steps to Create a win32 C application container
+#### 3.1.1 Steps to Create a win32 C development container
 
 1. Open a Command PowerShell CLI in: ***.\Sub-Containers\Afx-X11-Forward-win32-c-Service\\***
 2. **Configure the project**:
@@ -510,10 +512,10 @@ By default, this sub-container creates a typical Win32 C Desktop application pro
      - **Network Configuration**: If needed, you can specify an alternative subnet and IP address by adjusting the variables **FIXED_SUBNET** and **FIXED_IP**.
 3. Execute the Docker command to create the project:
    <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_win32-c_project.yml up -d  --remove-orphans --build --force-recreate </pre> 
-   <span class="nje-expect">*Note: This will create a container and a C Win32 Desktop project by default.*</span>
+   <span class="nje-expect">*Note: This will create a container and a C Win32 Desktop template project by default.*</span>
 <div class="nje-br1"> </div> 
 
-#### 3.1.2 Attach to the win32 C application container
+#### 3.1.2 Attach to the win32 C development container
 
 After running the commands in 3.1.1, you can start the **C Win32 sub-container** in combination with the WSL. See the **side note: Start Docker via WSL** if you need help with this. Once started, you can use Visual Studio Code (VSC) to start developing the application. For help with VSC, see Section 4. Here are the steps in short to start/attach to the container:
 
@@ -557,9 +559,76 @@ wine bin/out32.exe              # Execute it
 wine64 bin/64/out64.exe         # or in case of 64 bits version
  </pre>
 Yes, your development will typically be in Visual Studio Code or another IDE, but these CLI steps should demonstrate that everything is working correctly.
-
 </div>
-<div class="nje-br3"> </div> 
+
+---
+<div class="nje-br1"> </div>
+
+### 3.2 Creating a Win32 CPP development sub-container <small>(afx-x11-forward-win32-cpp-service)</small>
+
+With this sub-container, we will create a GUI project for a classic **Win32** application using the **C++ language**. Note that for **C** we have a dedicated Sub-container, see section 3.1 here above
+
+By default, this sub-container creates a typical Win32 C++ Desktop application project. We currently provide only one template, but other specialized templates can be added. In the ***.env** file, the type: **PRJ_TYPE_USE_CUSTOM_APP=Yes** is used to install the template project. See Section 4 for the global usage of this container in Visual Studio Code (VSC). If there are any specifics regarding VSC, we will indicate them at the end of this section.
+<div class="nje-br1"> </div>
+
+#### 3.2.1 Steps to Create a win32 C++ development container
+
+1. Open a Command PowerShell CLI in: ***.\Sub-Containers\Afx-X11-Forward-win32-cpp-Service\\***
+2. **Configure the project**:
+   - Optional, open the ***.env*** file to adjust the necessary settings:
+     - **Project Name**: Set the variable **PRJ_NAME_ARG** to your desired project name. This will be used for both the project name and the project directory. If omitted, the default value will be used.
+     - **Network Configuration**: If needed, you can specify an alternative subnet and IP address by adjusting the variables **FIXED_SUBNET** and **FIXED_IP**.
+3. Execute the Docker command to create the project:
+   <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_win32-cpp_project.yml up -d  --remove-orphans --build --force-recreate </pre>
+   <span class="nje-expect">*Note: This will create a container and a C++ Win32 Desktop template project by default.*</span>
+<div class="nje-br1"> </div>
+
+#### 3.2.2 Attach to the win32 CPP development container
+
+After running the commands in 3.2.1, you can start the **C++ Win32 sub-container** in combination with the WSL. See the **side note: Start Docker via WSL** if you need help with this. Once started, you can use Visual Studio Code (VSC) to start developing the application. For help with VSC, see Section 4. Here are the steps in short to start/attach to the container:
+
+- In an OS Terminal: Start the WSL and attach Docker in the WSL:
+  <pre class="nje-cmd-multi-line-sm">
+
+  wsl -d Ubuntu-docker-App-X11-Win32Dev
+
+  # In the Resulting WSL terminal attach the docker container:
+  #   - When it is not started you can do this here with:
+  #        docker start afx-x11-forward-win32-cpp-service-axf-win32-cpp-1
+  #
+  docker exec -it afx-x11-forward-win32-cpp-service-axf-win32-cpp-1 /bin/bash
+
+    # Restart Docker application if the container can not be found!
+
+  # Use command 'pwd' to check your directory location
+  # Make sure XLaunch is started on the host!
+  #
+  # WARNING: When the container can't be found, first try to restart the Docker service!
+  </pre>
+
+<div class="nje-expect-multi-lines-indent2">
+Commands to check your C++ installation in the Docker terminal:
+<pre class="nje-cmd-multi-line-sm">
+
+pwd                        # Should displays your project directory including source code 
+source ./set_env.sh        # Set the environment variables from the file ***.env*** in ~/.bashrc
+make all                   # Should generate executable out32.exe in _make_out
+wine _make_out/app.exe   # Should display the application (running for the first time takes a while)
+make -fmakefile64 all      # Should generate executable out64.exe in _make_out/64
+win64e _make_out/64/app.exe   # Should display the application (running for the first time takes a while)
+
+# Alternatively you may use cmake to build the app
+cd _build
+cmake ..                        # Configuration 32 bits (unicode) or use:
+cmake .. -DUSE_64_BIT=ON        # OR Configuration 64 bits (unicode) Other build dir!
+cmake --build .                 # Builds 32 or 64 Application in _build/bin
+cmake --build . --target out32 -- VERBOSE=1 # Alternatively, be specific and use debug output
+wine bin/out32.exe              # Execute it
+wine64 bin/64/out64.exe         # or in case of 64 bits version
+ </pre>
+Yes, your development will typically be in Visual Studio Code or another IDE, but these CLI steps should demonstrate that everything is working correctly.
+</div>
+<div class="nje-br3"> </div>
 
 <details class="nje-back-box">
   <summary>Troubleshooting: Starting Docker via WSL
@@ -594,8 +663,8 @@ docker exec -it  YourSubContainer /bin/bash
 </details>
 <br />
 <!-- <span class="nje-br"> </span> HALF height break-->
-
-<hr>
+---
+<div class="nje-br1"> </div>
 
 ## 4 Develop with VSC in the host
 
@@ -608,7 +677,7 @@ First ensure you have the following extensions installed locally to work with Do
 - **Docker** (Microsoft)
 - **Dev Containers** (Microsoft) optional
 
-### 4.1. Open the C application container in VSC (@host)
+### 4.1.1 Open the C application container in VSC (@host)
 
 - **Make sure** Docker is attached from the WSL! See [here]( #312-attach-to-the-win32-c-application-container)
 - Within Visual Studio Code,press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
@@ -616,7 +685,7 @@ First ensure you have the following extensions installed locally to work with Do
 - Alternatively you might click on the **Docker boot** on the left toolbar and select the container from there.  
 This opens a new Window with the  container information
 
-### 4.2. Open Folder and building your app.
+#### 4.1.2. Open Folder and building your app.
 
 - Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
   - Select Open Folder and enter: **/projects/win32_c/default_prj**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
@@ -652,7 +721,7 @@ In case the intellisense indicates errors in one of the project files this is pr
 </details>
 <span class="nje-br2"> </span>
 
-Similar to the extensions, we also provide default settings for this container. These settings define the global configurations as well as the default build and run behavior. The build and run behavior is explained in the next section (4.3). See the side note below for details.
+Similar to the extensions, we also provide default settings for this container. These settings define the global configurations as well as the default build and run behavior. The build and run behavior is explained in the next section (4.1.3). See the side note below for details.
 <br>
 
 <details class="nje-note-box">
@@ -672,13 +741,11 @@ Similar to the extensions, we also provide default settings for this container. 
 </details>
 <span class="nje-br2"> </span>
 
+### 4.1.3 VSC Build tasks
 
-### 4.3 VSC Build tasks
+In the menu **'Terminal -> Run Tasks...'** You can find the build task for our project, which are defined in the settings file (see side note above). All our build tasks start with the prefix: AFX: so they should also be self-explanatory.
 
-In the menu **'Terminal -> Run Tasks...'** You can find the build task for our project, which are defined in the settings file (see side note above). All our build tasks start with the prefix: AFX: so they should also be self-explanatory. 
-
-
-### 4.4 Debug
+### 4.1.4 Debug
 
 To debug we use the **gdbserver** this must be started before you can debug the application. 
 
@@ -687,9 +754,92 @@ In a CMD Docker shell (root), enter the following command: <span class="nje-cmd-
 
 This will automatically discover the application name and directory to use the correct executable for debugging. It reads the information from the ***.env file***. The same ***.env*** file is also used by VS Code (in ***launch.json*** actually, the command ***set_env.sh*** updates the launch file with the information from the .env file). 
 
- After starting the server you can set breakpoints and debug as you are used to
+ After starting the server you can set breakpoints and debug as you are used to.
 
-### 4.5  Backup
+---
+
+### 4.2.1 Open the C++ application container in VSC (@host)
+
+- **Make sure** Docker is attached from the WSL! See [here](#322-attach-to-the-win32-cpp_application-container)
+- Within Visual Studio Code,press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
+- Select our **afx-x11-forward-win32-cpp-service-afx-win32-cpp-1** container
+- Alternatively you might click on the **Docker boot** on the left toolbar and select the container from there.  
+This opens a new Window with the  container information
+
+#### 4.2.2. Open Folder and building your app.
+
+- Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
+  - Select Open Folder and enter: **/projects/win32-c++/project_name/**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
+
+<details class="nje-note-box">
+  <summary> Recommend extensions
+  </summary>
+  For this Docker project we have a few extensions defined, please allow these in during the opening of the container, so when you see something like: ***'Do you want to install the recommended extensions from ...'*** Press on the **Install**  button, this makes sure all functionality will work as defined, see the file ***.vscode/extensions.json*** for the recommend extension list.
+
+</details>
+<span class="nje-br2"> </span>
+
+When opening the Win32 C++ container and the project root folder in Visual Studio Code, a dedicated Visual Studio Code server will be installed within the container. This server provides a full Visual Studio Code environment with its own settings and extensions, which we have provided (see the side note below). Upon opening the folder for the first time, the system will detect any required extensions and may prompt you to install them. If so, follow the instructions to complete the installation. For a list of extensions, refer to the side note below.
+
+<details class="nje-note-box">
+  <summary> Container Extensions
+  </summary>
+  ### **Visual Studio Code** used container extensions
+  Specific extensions for this container are installed. Local extensions should be disabled for this container to prevent poor performance in Visual Studio Code and avoid other side effects. Container-specific extensions are listed in the file located at: ***.devcontainer/devcontainer.json.***
+  Currently, it contains:
+  <div class="custom-style" style="--nje-color: #8b5e3c; --nje-size: 12px;">
+  <span class="nje-ident"></span> ms-vscode.cpptools <br>
+  <span class="nje-ident"></span> ms-vscode.cmake-tools <br>
+  <span class="nje-ident"></span> ms-vscode.cpptools-extension-pack<br>
+  <span class="nje-ident"></span> ms-vscode.makefile-tools<br>
+  <span class="nje-ident"></span> xyz.local-history<br>
+</div>
+  
+ *Remark:*{: style="color: black;font-size:13px; "}
+ <small>Be aware that extensions may trigger other extensions to be included  <br></small>
+
+In case the intellisense indicates errors in one of the project files this is probably due to the missing of an extension.
+</details>
+<span class="nje-br2"> </span>
+
+Similar to the extensions, we also provide default settings for this container. These settings define the global configurations as well as the default build and run behavior. The build and run behavior is explained in the next section (4.2.3). See the side note below for details.
+<br>
+
+<details class="nje-note-box">
+  <summary> VS Code Settings files
+  </summary>
+  
+  To change the build targets and related settings, you will need to update the files in the **.vscode directory** of the project. This is why it’s essential to open the correct project directory; ensuring that the project directory is the root allows VS Code to search for a .vscode directory in the root to apply the settings for this project. The following settings files are available in .vscode:
+  
+  - .vscode/tasks.json: For build tasks.
+  - .vscode/launch.json: For debugging configurations.
+  - .vscode/settings.json: For general VS Code settings specific to your container.
+  - .vscode/keybindings.json: Specific shortcuts.
+  
+   *Warning:*{: style="color: red;font-size:12px; "}
+   <small>While the ***keybindings.json*** is included in.vscode it will not work cause the one generated in the roaming user profile(empty!) will be used instead. overwrite that with this content if needed.  <br></small>
+
+</details>
+<span class="nje-br2"> </span>
+
+### 4.2.3 VSC Build tasks
+
+In the menu **'Terminal -> Run Tasks...'** You can find the build task for our project, which are defined in the settings file (see side note above). All our build tasks start with the prefix: AFX: so they should also be self-explanatory.
+
+### 4.2.4 Debug
+
+To debug we use the **gdbserver** this must be started before you can debug the application. 
+
+***To Start It Manually***  
+In a CMD Docker shell (root), enter the following command: <span class="nje-cmd-inline-sm"> ./runsvr.sh</span>
+
+This will automatically discover the application name and directory to use the correct executable for debugging. It reads the information from the ***.env file***. The same ***.env*** file is also used by VS Code (in ***launch.json*** actually, the command ***set_env.sh*** updates the launch file with the information from the .env file).
+
+ After starting the server you can set breakpoints and debug as you are used to.
+
+---
+
+### 4.2  Backup
 
 There is a simple backup script which you can use to backup the project to **shared-host** directory. In a Docker shell (root) execute: <span class="nje-cmd-inline-sm">./_backup </span>
 
