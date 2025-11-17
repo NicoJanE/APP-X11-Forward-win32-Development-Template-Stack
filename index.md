@@ -41,8 +41,11 @@ In addition to the base container, which is required, the actual Win32 C project
     </span>
 </span>
  </div>
+ <div class="nje-br3"> </div>
 
- <div class="nje-br3"> </div> 
+
+> **Announcement:**{: style="color: blue;font-size:12px; "} <br>
+*This container has been updated and reviewed(nov 2025) Next the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** will be integrated into this componentAfter that the component **App X11 Forward GUI Cross-Compiling Win32 C++** will be declared  deprecated and will be removed in the future{: style="color: Darkgray;font-size:12px; "}* <br>
 
 <span class="nje-br3"> </span>
 <sub><i> This file is part of:  **App-X11-Forward-win32-C-Development-Template -Stack**
