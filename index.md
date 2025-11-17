@@ -44,15 +44,14 @@ In addition to the base container, which is required, the actual Win32 C project
     <span class="nje-column1-value">Win32 C++ Cross Compilation</span>
     <span class="nje-column2-desc">Development environment for Win32 C++ MINGW development projects, includes a Win32 C++ template project. </span>
     <span class="nje-column3-button"> 
-       <a href="./Howtos/howto_create_a_dev_container.md#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service">Setup Guide</a>
+       <a href="./Howtos/howto_create_a_dev_container#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service">Setup Guide</a>
     </span>
 </span>
  </div>
  <div class="nje-br3"> </div>
 
-
-> **Announcement:**{: style="color: blue;font-size:12px; "} <br>
-*This container has been updated and reviewed(nov 2025) Next the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** will be integrated into this componentAfter that the component **App X11 Forward GUI Cross-Compiling Win32 C++** will be declared  deprecated and will be removed in the future{: style="color: Darkgray;font-size:12px; "}* <br>
+> **Announcement:**{: style="color: blue;font-size:11px; "} <br>
+*This container has been updated and reviewed(nov 2025) The sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++**  has been integrated into this stack component. This means that the component **App X11 Forward GUI Cross-Compiling Win32 C++** is now declared deprecated and will be removed in the future{: style="color: Darkgray;font-size:11px; "}* <br>
 
 <span class="nje-br3"> </span>
 <sub><i> This file is part of:  **App-X11-Forward-win32-C-Development-Template -Stack**
