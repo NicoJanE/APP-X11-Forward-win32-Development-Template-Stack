@@ -346,7 +346,7 @@ Finally, to create an start the base container.
 4. **Use the specific WSL startup procedure described below**
    - Always start containers from the correct WSL distribution to ensure X11 forwarding works
 
-## Steps to Connect
+## Steps to Connect the Base Container
 
 Execute these commands to attach to the container from the correct WSL distribution:
 
@@ -406,13 +406,13 @@ Enabling WSL integration in Docker Desktop is **always required** for this devel
 
 </details>
 
-### 2.1.7 Verify the Setup
+### 2.1.7 Verify the Basic container Setup
 
 After running the command in section 'Create the basic Docker Container' and section 'Start Docker from the WSL Distribution' we can test if the setup **succeeded**. Make sure the docker container is started from our WSL (see: [Start Docker from the WSL Distribution](start-docker-from-the-wsl-distribution) )
 
 #### Verify the X Output
 
-- In th Docker container CLI prompt (which you just opened via the wsl) , started from the WSL,  enter:
+- In the Docker container Bash CLI prompt (which you just opened via the wsl), enter:
   <pre class="nje-cmd-one-line-sm-ident1"> xeyes</pre>
   <span class="nje-expect-block">*This should display a pair of eyes in a Window (X is working properly)*. *When you don't see it check if XLaunch is started.* </span>
 
@@ -447,7 +447,7 @@ i686-w64-mingw32-gcc hello.c -o out.exe       # Creates 32 bits App
 
 ## 2.2 What do we have and What's next?
 
-After the previous build, the Base Container now includes:
+After the previous setup, the Base Container now includes:
 <div class="nje-features-box">
 - **MinGW** - Win32 cross-compiler (32-bit and 64-bit support)
 - **Wine** - Windows emulator for running Win32 executables
@@ -663,21 +663,22 @@ docker exec -it  YourSubContainer /bin/bash
 </details>
 <br />
 <!-- <span class="nje-br"> </span> HALF height break-->
+
 ---
+
 <div class="nje-br1"> </div>
 
 ## 4 Develop with VSC in the host
 
-To develop in **V**isual **S**tudio **C**ode we advise the following instructions
+To develop in **V**isual **S**tudio **Code** we advise the following instructions
 
-First ensure you have the following extensions installed locally to work with Docker containers:
+- First ensure you have the following extensions installed locally to work with Docker containers:
+  - **Remote Development**.
+    Attach VSC to Docker(Develop directly inside our Docker container ), Remote WSL, Develope on remote SSH, GitHub Codespaces. 
+  - **Docker** (Microsoft)
+  - **Dev Containers** (Microsoft) optional
 
-- **Remote Development**.
-  Attach VSC to Docker(Develop directly inside our Docker container ), Remote WSL, Develope on remote SSH, GitHub Codespaces. 
-- **Docker** (Microsoft)
-- **Dev Containers** (Microsoft) optional
-
-### 4.1.1 Open the C application container in VSC (@host)
+### 4.1 Open the C Development container in VSC (@host)
 
 - **Make sure** Docker is attached from the WSL! See [here]( #312-attach-to-the-win32-c-application-container)
 - Within Visual Studio Code,press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
@@ -685,7 +686,7 @@ First ensure you have the following extensions installed locally to work with Do
 - Alternatively you might click on the **Docker boot** on the left toolbar and select the container from there.  
 This opens a new Window with the  container information
 
-#### 4.1.2. Open Folder and building your app.
+#### 4.1.1. Open Folder and building your app.
 
 - Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
   - Select Open Folder and enter: **/projects/win32_c/default_prj**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
@@ -741,11 +742,11 @@ Similar to the extensions, we also provide default settings for this container. 
 </details>
 <span class="nje-br2"> </span>
 
-### 4.1.3 VSC Build tasks
+#### 4.1.2 VSC Build tasks
 
 In the menu **'Terminal -> Run Tasks...'** You can find the build task for our project, which are defined in the settings file (see side note above). All our build tasks start with the prefix: AFX: so they should also be self-explanatory.
 
-### 4.1.4 Debug
+#### 4.1.3 Debug
 
 To debug we use the **gdbserver** this must be started before you can debug the application. 
 
@@ -758,7 +759,7 @@ This will automatically discover the application name and directory to use the c
 
 ---
 
-### 4.2.1 Open the C++ application container in VSC (@host)
+### 4.2 Open the C++ Development container in VSC (@host)
 
 - **Make sure** Docker is attached from the WSL! See [here](#322-attach-to-the-win32-cpp_application-container)
 - Within Visual Studio Code,press CTRL-SHIFT-P or F1 and select (start typing) **Attach to running container...**
@@ -766,7 +767,7 @@ This will automatically discover the application name and directory to use the c
 - Alternatively you might click on the **Docker boot** on the left toolbar and select the container from there.  
 This opens a new Window with the  container information
 
-#### 4.2.2. Open Folder and building your app.
+#### 4.2.1. Open Folder and building your app.
 
 - Use the **VSC Explorer** and the **Open Folder** to open the remote container's folder. **Ensure** you open the correct folder so that the **.vscode** directory settings are applied properly.
   - Select Open Folder and enter: **/projects/win32-c++/project_name/**. This will ensure the project is loaded along with the settings configured in the .vscode folder. (Alternatively, you can obtain the path by opening a terminal inside the Docker container. The initial folder shown by the pwd command will give you the correct path.)
@@ -822,11 +823,11 @@ Similar to the extensions, we also provide default settings for this container. 
 </details>
 <span class="nje-br2"> </span>
 
-### 4.2.3 VSC Build tasks
+#### 4.2.2 VSC Build tasks
 
 In the menu **'Terminal -> Run Tasks...'** You can find the build task for our project, which are defined in the settings file (see side note above). All our build tasks start with the prefix: AFX: so they should also be self-explanatory.
 
-### 4.2.4 Debug
+#### 4.2.3 Debug
 
 To debug we use the **gdbserver** this must be started before you can debug the application. 
 
@@ -839,9 +840,11 @@ This will automatically discover the application name and directory to use the c
 
 ---
 
-### 4.2  Backup
+## 5 Backup
 
 There is a simple backup script which you can use to backup the project to **shared-host** directory. In a Docker shell (root) execute: <span class="nje-cmd-inline-sm">./_backup </span>
+
+## 5 appendix's
 
 <details class="nje-back-box">
   <summary>Appendix: Quick Setup
