@@ -906,7 +906,7 @@ This step is **required** it makes sure the basic packages are installed in the 
 
 This ***optional*** subcontainer adds a C development environment and installs the C Win32 template project to the container.
 
-- In a PowerShell CLI run this command [()More info here)](#31-creating-a-win32-c-development-sub-container-afx-x11-forward-win32-c-service)
+- In a PowerShell CLI run this command [(More info here)](#31-creating-a-win32-c-development-sub-container-afx-x11-forward-win32-c-service)
    <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_win32-c_project.yml up -d  --remove-orphans --build --force-recreate  </pre>
 
 #### Attach the 'C-Development' Docker container to the WSL
@@ -927,7 +927,7 @@ To make sure our Docker image uses the correct WSL execute these command [()more
 
 This ***optional*** sub container add a C++ development environment and install the C++ Win32 template project to the container
 
-- In a PowerShell CLI run this command [()more info here)](#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service)
+- In a PowerShell CLI run this command [(more info here)](#32-creating-a-win32-cpp-development-sub-container-afx-x11-forward-win32-cpp-service)
    <pre class="nje-cmd-one-line-sm-indent1">docker-compose -f compose_win32-cpp_project.yml up -d  --remove-orphans --build --force-recreate  </pre>
 
 #### Attach the 'C++ Development' Docker container to the WSL
