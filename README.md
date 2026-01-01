@@ -14,7 +14,7 @@ For more Setup information and details, visit the [main documentation page](http
 *This container has been updated and reviewed(nov 2025) the sub-container of the stack component: **App X11 Forward GUI Cross-Compiling Win32 C++** HAS been integrated into this component. <br>
 
 <br>
-<small> <i><b>License</b><br>This file is part of: <b>App-X11-Forward-win32-C/C++ Stack</b>  Copyright (c) 2025-2026 Nico Jan Eelhart.This repository is <a href="MIT-license.md">MIT licensed</a>and free to use. For optional commercial support, customization, training, or long-term maintenance, see <a href="COMMERCIAL.md">COMMERCIAL.md</a></i>
+<small> <i><b>License</b><br>This file is part of: <b>App-X11-Forward-win32-C/C++ Stack</b>  Copyright (c) 2025-2026 Nico Jan Eelhart.This repository is <a href="MIT-license.md">MIT licensed</a> and free to use. For optional commercial support, customization, training, or long-term maintenance, see <a href="COMMERCIAL.md">COMMERCIAL.md</a></i>
 </small>
 
 
