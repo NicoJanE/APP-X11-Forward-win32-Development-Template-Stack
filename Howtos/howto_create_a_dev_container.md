@@ -4,7 +4,7 @@ RefPages:
  - howto_create_a_dev_container   
 --- 
 
-<!-- markdownlint-disable MD033 MD001 MD041 MD040 MD001  MD039 MD037 MD026 MD007 -->
+<!-- markdownlint-disable MD033 MD001 MD041 MD040 MD001  MD039 MD037 MD026 MD007  -->
 
  <div class="nje-br3"> </div> 
 
@@ -24,9 +24,11 @@ RefPages:
   - [Appendix 1 Quick Setup](#appendix-1-quick-setup) <br><br>
 </div>
 
- <div class="nje-br2"> </div> 
+ <div class="nje-br2"> </div>
 
 # Cross-Compiling Win32 <span style="color: #409EFF; font-size: 0.6em; font-style: italic;"> -  Docker Setup & Usage Guide</span>
+
+![MIT License](https://img.shields.io/badge/License-MIT-green) ![Commercial Services Available](https://img.shields.io/badge/Services-Optional-blue)
 
 ## ℹ️ Introduction
 
@@ -960,9 +962,9 @@ After this you should be able to open the container in VSC and start developing 
 
 </details>
 
-<span class="nje-br3"> </span>
-<sub><i> This file is part of:  **App-X11-Forward-win32-C-Development-Template -Stack**
-Copyright (c) 2025 Nico Jan Eelhart. This source code is licensed under the MIT License found in the  'LICENSE.md' file in the root directory of this source tree.
-</i></sub>
+<span style="color: #6d757dff; font-size: 13px; font-style: italic;"> <br>
+<i><b>License</b><br>This file is part of: **App-X11-Forward-win32-C/C++ Stack**  Copyright (c) 2025-2026 Nico Jan Eelhart.This repository is [MIT licensed](MIT-license.md) and free to use. For optional commercial support, customization, training, or long-term maintenance, see [COMMERCIAL.md](COMMERCIAL.md).</i>
+</span>
 
+<br>
 <p align="center">─── ✦ ───</p>
